@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "wouter";
-import { MOCK_CONTACTS, Contact } from "@/lib/mock-data";
+import { Contact } from "@/lib/mock-data";
+import { useContacts } from "@/lib/contacts-context";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { 
@@ -22,7 +23,7 @@ import { Search, Filter, MoreHorizontal, UserPlus, Phone, MapPin } from "lucide-
 
 export default function ContactsPage() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [contacts] = useState<Contact[]>(MOCK_CONTACTS);
+  const { contacts } = useContacts();
 
   const filteredContacts = contacts.filter(c => 
     c.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -82,52 +83,60 @@ export default function ContactsPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredContacts.map((contact) => (
-              <TableRow key={contact.id} className="hover:bg-muted/30 transition-colors">
-                <TableCell className="font-medium">
-                  <div className="flex flex-col">
-                    <span className="text-base">{contact.fullName}</span>
-                    <span className="text-xs text-muted-foreground flex items-center gap-1">
-                      <Phone className="h-3 w-3" /> {contact.phone}
-                    </span>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Badge className={`border-0 font-medium ${getStatusColor(contact.status)}`}>
-                    {contact.status}
-                  </Badge>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                    <MapPin className="h-3 w-3" />
-                    {contact.location}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex flex-wrap gap-1">
-                    {contact.tags.map(tag => (
-                      <Badge key={tag} variant="outline" className="text-xs text-muted-foreground font-normal">
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                </TableCell>
-                <TableCell className="text-right">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-8 w-8">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem>View Details</DropdownMenuItem>
-                      <DropdownMenuItem>Log Follow-up</DropdownMenuItem>
-                      <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+            {filteredContacts.length > 0 ? (
+              filteredContacts.map((contact) => (
+                <TableRow key={contact.id} className="hover:bg-muted/30 transition-colors">
+                  <TableCell className="font-medium">
+                    <div className="flex flex-col">
+                      <span className="text-base">{contact.fullName}</span>
+                      <span className="text-xs text-muted-foreground flex items-center gap-1">
+                        <Phone className="h-3 w-3" /> {contact.phone}
+                      </span>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <Badge className={`border-0 font-medium ${getStatusColor(contact.status)}`}>
+                      {contact.status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                      <MapPin className="h-3 w-3" />
+                      {contact.location}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex flex-wrap gap-1">
+                      {contact.tags.map(tag => (
+                        <Badge key={tag} variant="outline" className="text-xs text-muted-foreground font-normal">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem>View Details</DropdownMenuItem>
+                        <DropdownMenuItem>Log Follow-up</DropdownMenuItem>
+                        <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={5} className="h-24 text-center">
+                  No contacts found.
                 </TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </div>

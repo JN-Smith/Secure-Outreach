@@ -11,6 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
+import { useContacts } from "@/lib/contacts-context";
 
 const contactSchema = z.object({
   fullName: z.string().min(2, "Name is required"),
@@ -39,6 +40,7 @@ const contactSchema = z.object({
 export default function ContactFormPage() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+  const { addContact } = useContacts();
   
   const form = useForm<z.infer<typeof contactSchema>>({
     resolver: zodResolver(contactSchema),
@@ -55,13 +57,14 @@ export default function ContactFormPage() {
   const isStudent = form.watch("isStudent");
 
   function onSubmit(values: z.infer<typeof contactSchema>) {
-    console.log(values);
+    addContact({ ...values, tags: [] });
+    
     toast({
       title: "Contact Saved",
       description: "New outreach contact has been successfully recorded.",
     });
     // Simulate delay then redirect
-    setTimeout(() => setLocation("/contacts"), 1000);
+    setTimeout(() => setLocation("/contacts"), 500);
   }
 
   return (

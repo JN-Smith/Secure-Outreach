@@ -6,12 +6,14 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import Layout from "@/components/layout";
 import { AuthProvider, useAuth } from "@/lib/mock-auth";
+import { ContactsProvider } from "@/lib/contacts-context";
 
 // Pages
 import AuthPage from "@/pages/auth-page";
 import DashboardPage from "@/pages/dashboard-page";
 import ContactsPage from "@/pages/contacts-page";
 import ContactFormPage from "@/pages/contact-form-page";
+import SettingsPage from "@/pages/settings-page";
 
 function AuthenticatedApp() {
   return (
@@ -20,6 +22,7 @@ function AuthenticatedApp() {
         <Route path="/" component={DashboardPage} />
         <Route path="/contacts" component={ContactsPage} />
         <Route path="/contacts/new" component={ContactFormPage} />
+        <Route path="/settings" component={SettingsPage} />
         <Route component={NotFound} />
       </Switch>
     </Layout>
@@ -37,7 +40,6 @@ function Router() {
 
   if (user && location === "/auth") {
     // If logged in and trying to access auth, redirect to dash
-    // Note: In real wouter, might need useEffect for redirect, but rendering App is fine
     return <AuthenticatedApp />;
   }
 
@@ -53,8 +55,10 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <AuthProvider>
-          <Toaster />
-          <Router />
+          <ContactsProvider>
+            <Toaster />
+            <Router />
+          </ContactsProvider>
         </AuthProvider>
       </TooltipProvider>
     </QueryClientProvider>
