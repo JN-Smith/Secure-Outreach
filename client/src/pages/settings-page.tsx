@@ -99,6 +99,36 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
 
+        {/* Admin Only Section */}
+        {user?.role === "admin" && (
+          <Card className="border-primary/20 bg-primary/5">
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <Shield className="h-5 w-5 text-primary" />
+                <CardTitle>Admin Controls</CardTitle>
+              </div>
+              <CardDescription>Manage system-wide settings and user access.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>User Registration</Label>
+                  <p className="text-sm text-muted-foreground">Allow new users to sign up.</p>
+                </div>
+                <Switch defaultChecked />
+              </div>
+              <Separator className="bg-primary/10" />
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>Database Backup</Label>
+                  <p className="text-sm text-muted-foreground">Last backup: 2 hours ago</p>
+                </div>
+                <Button variant="outline" size="sm">Backup Now</Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Security */}
         <Card className="border-destructive/20">
           <CardHeader>

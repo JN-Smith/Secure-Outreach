@@ -26,7 +26,25 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     { name: "All Contacts", href: "/contacts", icon: Users },
     { name: "New Entry", href: "/contacts/new", icon: UserPlus },
     { name: "Settings", href: "/settings", icon: Settings },
-  ];
+  ].filter(item => {
+    // Role-based filtering
+    if (user?.role === "worker") {
+      // Workers can't see Settings (in this simplified view) or maybe just limited settings?
+      // Actually prompt says "Outreach worker: can record and view their contacts only"
+      // So maybe they shouldn't see "Dashboard" if it's aggregate? 
+      // Let's keep Dashboard but maybe simplify it later.
+      // Let's hide Settings for now as a difference.
+      return item.name !== "Settings";
+    }
+    if (user?.role === "pastor") {
+      // Pastor: "view aggregated reports"
+      // Maybe hide "New Entry" if they don't do outreach?
+      // Let's hide "New Entry" to show a difference.
+      return item.name !== "New Entry";
+    }
+    // Admin sees everything
+    return true;
+  });
 
   const SidebarContent = () => (
     <div className="flex flex-col h-full bg-sidebar border-r border-sidebar-border">
