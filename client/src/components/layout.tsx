@@ -12,8 +12,9 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
@@ -97,12 +98,17 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="p-0 w-64 border-r-0">
+          <VisuallyHidden>
+            <SheetTitle>Navigation Menu</SheetTitle>
+            <SheetDescription>Main navigation menu for Outreach Connect</SheetDescription>
+          </VisuallyHidden>
           <SidebarContent />
         </SheetContent>
       </Sheet>
 
       {/* Main Content */}
       <main className="flex-1 md:ml-64 min-h-screen">
+
         <div className="container max-w-6xl mx-auto p-4 md:p-8 pt-20 md:pt-8 animate-in fade-in duration-500">
           {children}
         </div>

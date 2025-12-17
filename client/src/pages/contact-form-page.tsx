@@ -402,8 +402,13 @@ export default function ContactFormPage() {
             <Button variant="outline" type="button" onClick={() => setLocation("/contacts")}>
               Cancel
             </Button>
-            <Button type="submit" size="lg" className="shadow-lg shadow-primary/25">
-              Save Contact
+            <Button 
+              type="submit" 
+              size="lg" 
+              className="shadow-lg shadow-primary/25"
+              disabled={form.formState.isSubmitting}
+            >
+              {form.formState.isSubmitting ? "Saving..." : "Save Contact"}
             </Button>
           </div>
         </form>
