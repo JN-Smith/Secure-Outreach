@@ -1,0 +1,111 @@
+Goal: Build a secure outreach app for volunteers and church staff to record and follow up with people they reach.
+
+1. Authentication & User Accounts
+
+Users can sign up once with email or phone and a password.
+
+Supports automatic login on trusted devices.
+
+Secure authentication with role-based access:
+
+Outreach worker: can record and view their contacts only
+
+Pastor/Leader: can view aggregated reports
+
+Admin: full access
+
+Password reset and email verification included.
+
+2. Core Feature – Recording Contacts
+
+Create a form for outreach entries with the following fields:
+
+Personal Information
+
+Full Name
+
+Phone Number / Contact Details (consent checkbox)
+
+Gender (optional)
+
+Age Range (optional)
+
+Spiritual & Church Info
+
+Church they attend (if any)
+
+Born again? (Yes / No / Unsure)
+
+Discipleship status (Done / In Progress / Not Started)
+
+Baptized? (Yes / No / Unsure)
+
+Location & Background
+
+Place of residence (town/area)
+
+Is the person a student? (Yes / No)
+
+If yes: Institution name, course, year of study
+
+Follow-Up & Pastoral Care
+
+Preferred method of follow-up (Call / WhatsApp / Visit / Church Invitation)
+
+Best time to contact
+
+Prayer requests
+
+Notes / Observations
+
+Follow-up status (New / Needs Follow-up / Actively Discipling / Connected to Church / Not Interested)
+
+3. Additional Features
+
+Tags for categorization (Student, New Believer, Campus Outreach, etc.)
+
+Search & filter by location, church, follow-up status, student/non-student
+
+Timeline or activity log for follow-ups
+
+Reminders for scheduled follow-ups
+
+Dashboard summary:
+
+Total people reached
+
+Pending follow-ups
+
+Students reached
+
+People connected to church
+
+Export reports as CSV/PDF
+
+4. Privacy & Ethics
+
+Consent acknowledgment when saving contact details
+
+Secure data storage (encrypted)
+
+Role-based access control for church staff
+
+5. Design & Experience
+
+Clean, mobile-first UI
+
+Easy, fast data entry
+
+Offline support with auto-sync when online
+
+Faith-based, respectful, and welcoming tone
+
+6. Tech Stack Recommendations (for Bolt AI)
+
+Frontend: Bolt low-code UI components
+
+Backend: Bolt database + workflows
+
+Authentication & login: Bolt Auth component
+
+Dashboard: Bolt charts & tables
