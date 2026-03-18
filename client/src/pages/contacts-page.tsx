@@ -20,10 +20,21 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { Search, Filter, MoreHorizontal, UserPlus, Phone, MapPin } from "lucide-react";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogClose
+} from "@/components/ui/dialog";
 
 export default function ContactsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const { contacts } = useContacts();
+  const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const filteredContacts = contacts.filter(c => 
     c.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -122,7 +133,7 @@ export default function ContactsPage() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => alert(`View details for ${contact.fullName}`)}>
+                        <DropdownMenuItem onClick={() => { setSelectedContact(contact); setDialogOpen(true); }}>
                           View Details
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => alert(`Log follow-up for ${contact.fullName}`)}>
@@ -146,6 +157,46 @@ export default function ContactsPage() {
           </TableBody>
         </Table>
       </div>
+      {/* Contact Details Dialog */}
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Contact Details</DialogTitle>
+            <DialogDescription>
+              {selectedContact ? (
+                <div className="space-y-2 text-left">
+                  <div><b>Name:</b> {selectedContact.fullName}</div>
+                  <div><b>Phone:</b> {selectedContact.phone}</div>
+                  <div><b>Gender:</b> {selectedContact.gender || "-"}</div>
+                  <div><b>Age Range:</b> {selectedContact.ageRange || "-"}</div>
+                  <div><b>Location:</b> {selectedContact.location}</div>
+                  <div><b>Church:</b> {selectedContact.church || "-"}</div>
+                  <div><b>Born Again:</b> {selectedContact.bornAgain}</div>
+                  <div><b>Baptized:</b> {selectedContact.baptized}</div>
+                  <div><b>Discipleship Status:</b> {selectedContact.discipleshipStatus}</div>
+                  <div><b>Is Student:</b> {selectedContact.isStudent ? "Yes" : "No"}</div>
+                  {selectedContact.isStudent && (
+                    <>
+                      <div><b>Institution:</b> {selectedContact.institution || "-"}</div>
+                      <div><b>Course:</b> {selectedContact.course || "-"}</div>
+                      <div><b>Year of Study:</b> {selectedContact.yearOfStudy || "-"}</div>
+                    </>
+                  )}
+                  <div><b>Follow-Up Method:</b> {selectedContact.followUpMethod}</div>
+                  <div><b>Best Time(s):</b> {selectedContact.bestTimes ? selectedContact.bestTimes.join(", ") : "-"}</div>
+                  <div><b>Follow-Up Status:</b> {selectedContact.followUpStatus || "-"}</div>
+                  <div><b>Tags:</b> {selectedContact.tags && selectedContact.tags.length > 0 ? selectedContact.tags.join(", ") : "-"}</div>
+                  <div><b>Prayer Requests:</b> {selectedContact.prayerRequests || "-"}</div>
+                  <div><b>Notes:</b> {selectedContact.notes || "-"}</div>
+                </div>
+              ) : null}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogClose asChild>
+            <Button variant="outline" className="mt-4 w-full">Close</Button>
+          </DialogClose>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -28,9 +28,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     { name: "Settings", href: "/settings", icon: Settings },
   ].filter(item => {
     // Role-based filtering
-    if (user?.role === "worker") {
-      // Workers can't see Settings (in this simplified view) or maybe just limited settings?
-      // Actually prompt says "Outreach worker: can record and view their contacts only"
+    if (user?.role === "evangelist") {
+      // Evangelists can't see Settings (in this simplified view) or maybe just limited settings?
+      // Actually prompt says "Evangelist: can record and view their contacts only"
       // So maybe they shouldn't see "Dashboard" if it's aggregate? 
       // Let's keep Dashboard but maybe simplify it later.
       // Let's hide Settings for now as a difference.
@@ -51,9 +51,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <div className="p-6 flex items-center gap-3">
         <div className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20">
           <HeartHandshake className="h-6 w-6 text-primary-foreground" />
-        </div>
         <div>
-          <h1 className="font-heading font-bold text-lg text-sidebar-foreground leading-none">Outreach</h1>
+          <h1 className="font-heading font-bold text-lg text-sidebar-foreground leading-none">
+            {user?.role === "evangelist" ? `Evangelist ${user?.username}` : "Outreach"}
+          </h1>
+        /*...*/
           <p className="text-xs text-sidebar-foreground/60 font-medium">Connect</p>
         </div>
       </div>

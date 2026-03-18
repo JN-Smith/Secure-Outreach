@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 import { useLocation } from "wouter";
 
-type UserRole = "admin" | "pastor" | "worker" | "evangelist" | "data_collector";
+type UserRole = "admin" | "pastor" | "evangelist" | "data_collector";
 
 interface User {
   id: string;

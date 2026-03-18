@@ -15,7 +15,7 @@ import generatedImage from '@assets/generated_images/abstract_community_connecti
 const formSchema = z.object({
   username: z.string().min(2, "Username is required"),
   password: z.string().min(6, "Password must be at least 6 characters"),
-  role: z.enum(["worker", "pastor", "admin"]),
+  role: z.enum(["evangelist", "pastor", "admin"]),
 });
 
 
@@ -28,7 +28,7 @@ export default function AuthPage() {
     defaultValues: {
       username: "",
       password: "",
-      role: "worker",
+      role: "evangelist",
     },
   });
 
@@ -124,7 +124,7 @@ export default function AuthPage() {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="worker">Outreach Worker</SelectItem>
+                            <SelectItem value="evangelist">Evangelist</SelectItem>
                             <SelectItem value="pastor">Pastor / Leader</SelectItem>
                             <SelectItem value="admin">Admin</SelectItem>
                           </SelectContent>
