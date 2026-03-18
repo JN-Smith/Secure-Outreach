@@ -30,12 +30,15 @@ function AuthenticatedApp() {
   );
 }
 
+function Router() {
   const { user } = useAuth();
   const [location] = useLocation();
 
   // If not logged in, show auth or signup page
   if (!user) {
-    if (location === "/signup") return <SignUpPage />;
+    if (location === "/signup") {
+      return <SignUpPage />;
+    }
     return <AuthPage />;
   }
 
@@ -45,6 +48,7 @@ function AuthenticatedApp() {
   }
 
   return <AuthenticatedApp />;
+}
 }
 
 function App() {
