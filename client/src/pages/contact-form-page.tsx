@@ -18,21 +18,26 @@ const contactSchema = z.object({
   phone: z.string().min(5, "Phone is required"),
   gender: z.string().optional(),
   ageRange: z.string().optional(),
-  
+
   // Spiritual
   church: z.string().optional(),
   bornAgain: z.enum(["Yes", "No", "Unsure"]),
   discipleshipStatus: z.enum(["Done", "In Progress", "Not Started"]),
   baptized: z.enum(["Yes", "No", "Unsure"]),
-  
+
   // Location & Background
   location: z.string().min(2, "Location is required"),
   isStudent: z.boolean().default(false),
   institution: z.string().optional(),
   course: z.string().optional(),
-  
+  yearOfStudy: z.string().optional(),
+
   // Follow Up
   followUpMethod: z.enum(["Call", "WhatsApp", "Visit", "Church Invitation"]),
+  bestTimes: z.array(z.string()).min(1, "At least one time is required"),
+  followUpStatus: z.enum(["New", "Needs Follow-up", "Actively Discipling", "Connected to Church", "Not Interested"]),
+  tags: z.array(z.string()).optional(),
+  prayerRequests: z.string().optional(),
   notes: z.string().optional(),
   consent: z.boolean().refine(val => val === true, "Consent is required"),
 });
@@ -50,11 +55,15 @@ export default function ContactFormPage() {
       baptized: "Unsure",
       isStudent: false,
       followUpMethod: "Call",
+      bestTimes: [""],
+      followUpStatus: "New",
+      tags: [],
       consent: false,
     },
   });
 
   const isStudent = form.watch("isStudent");
+  const bestTimes = form.watch("bestTimes");
 
   function onSubmit(values: z.infer<typeof contactSchema>) {
     addContact({ ...values, tags: [] });
@@ -294,7 +303,7 @@ export default function ContactFormPage() {
               />
 
               {isStudent && (
-                <div className="grid md:grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2">
+                <div className="grid md:grid-cols-3 gap-4 animate-in fade-in slide-in-from-top-2">
                   <FormField
                     control={form.control}
                     name="institution"
@@ -316,6 +325,19 @@ export default function ContactFormPage() {
                         <FormLabel>Course of Study</FormLabel>
                         <FormControl>
                           <Input placeholder="Major/Course..." {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="yearOfStudy"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Year of Study</FormLabel>
+                        <FormControl>
+                          <Input placeholder="e.g. 1st, 2nd, 3rd..." {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -351,6 +373,94 @@ export default function ContactFormPage() {
                         <SelectItem value="Church Invitation">Church Invitation</SelectItem>
                       </SelectContent>
                     </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {/* Best time(s) to contact */}
+              <div className="space-y-2">
+                <label className="block text-sm font-medium">Best Time(s) to Contact</label>
+                {bestTimes && bestTimes.map((time, idx) => (
+                  <div key={idx} className="flex gap-2 mb-1">
+                    <Input
+                      type="time"
+                      value={time}
+                      onChange={e => {
+                        const newTimes = [...bestTimes];
+                        newTimes[idx] = e.target.value;
+                        form.setValue("bestTimes", newTimes);
+                      }}
+                      className="w-40"
+                    />
+                    {bestTimes.length > 1 && (
+                      <Button type="button" size="sm" variant="ghost" onClick={() => {
+                        const newTimes = bestTimes.filter((_, i) => i !== idx);
+                        form.setValue("bestTimes", newTimes);
+                      }}>Remove</Button>
+                    )}
+                  </div>
+                ))}
+                <Button type="button" size="sm" variant="outline" onClick={() => form.setValue("bestTimes", [...bestTimes, ""])}>
+                  Add Another Time
+                </Button>
+              </div>
+              {/* Follow-up status */}
+              <FormField
+                control={form.control}
+                name="followUpStatus"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Follow-Up Status</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="New">New</SelectItem>
+                        <SelectItem value="Needs Follow-up">Needs Follow-up</SelectItem>
+                        <SelectItem value="Actively Discipling">Actively Discipling</SelectItem>
+                        <SelectItem value="Connected to Church">Connected to Church</SelectItem>
+                        <SelectItem value="Not Interested">Not Interested</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {/* Tags */}
+              <FormField
+                control={form.control}
+                name="tags"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Tags (comma separated)</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="e.g. Student, New Believer, Campus Outreach"
+                        value={field.value?.join(", ") || ""}
+                        onChange={e => field.onChange(e.target.value.split(",").map(s => s.trim()).filter(Boolean))}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {/* Prayer Requests */}
+              <FormField
+                control={form.control}
+                name="prayerRequests"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Prayer Requests</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Any specific prayer requests..."
+                        className="min-h-[60px]"
+                        {...field}
+                      />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
