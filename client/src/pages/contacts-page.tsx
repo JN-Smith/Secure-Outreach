@@ -122,9 +122,15 @@ export default function ContactsPage() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem>View Details</DropdownMenuItem>
-                        <DropdownMenuItem>Log Follow-up</DropdownMenuItem>
-                        <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => alert(`View details for ${contact.fullName}`)}>
+                          View Details
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => alert(`Log follow-up for ${contact.fullName}`)}>
+                          Log Follow-up
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="text-destructive" onClick={() => alert(`Delete ${contact.fullName}`)}>
+                          Delete
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
