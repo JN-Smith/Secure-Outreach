@@ -51,11 +51,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <div className="p-6 flex items-center gap-3">
         <div className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20">
           <HeartHandshake className="h-6 w-6 text-primary-foreground" />
+        </div>
         <div>
           <h1 className="font-heading font-bold text-lg text-sidebar-foreground leading-none">
             {user?.role === "evangelist" ? `Evangelist ${user?.username}` : "Outreach"}
           </h1>
-        /*...*/
+          {/* Connect tagline */}
           <p className="text-xs text-sidebar-foreground/60 font-medium">Connect</p>
         </div>
       </div>
@@ -83,11 +84,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <div className="p-4 border-t border-sidebar-border">
         <div className="flex items-center gap-3 mb-4 px-2">
           <Avatar className="h-9 w-9 border border-sidebar-border">
-            <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name}`} />
-            <AvatarFallback>{user?.name?.substring(0, 2).toUpperCase()}</AvatarFallback>
+            <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.username}`} />
+            <AvatarFallback>{user?.username?.substring(0, 2).toUpperCase()}</AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-sidebar-foreground truncate">{user?.name}</p>
+            <p className="text-sm font-medium text-sidebar-foreground truncate">{user?.username}</p>
             <p className="text-xs text-sidebar-foreground/60 truncate capitalize">{user?.role}</p>
           </div>
         </div>

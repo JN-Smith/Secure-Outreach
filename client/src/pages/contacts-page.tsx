@@ -183,8 +183,8 @@ export default function ContactsPage() {
                     </>
                   )}
                   <div><b>Follow-Up Method:</b> {selectedContact.followUpMethod}</div>
-                  <div><b>Best Time(s):</b> {selectedContact.bestTimes ? selectedContact.bestTimes.join(", ") : "-"}</div>
-                  <div><b>Follow-Up Status:</b> {selectedContact.followUpStatus || "-"}</div>
+                  <div><b>Best Time:</b> {selectedContact.bestTime || "-"}</div>
+                  <div><b>Follow-Up Status:</b> {selectedContact.status || "-"}</div>
                   <div><b>Tags:</b> {selectedContact.tags && selectedContact.tags.length > 0 ? selectedContact.tags.join(", ") : "-"}</div>
                   <div><b>Prayer Requests:</b> {selectedContact.prayerRequests || "-"}</div>
                   <div><b>Notes:</b> {selectedContact.notes || "-"}</div>

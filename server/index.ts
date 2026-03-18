@@ -1,10 +1,6 @@
-import express, { type Request, Response, NextFunction } from "express";
-import { registerRoutes } from "./routes";
-import { serveStatic } from "./static";
-import { createServer } from "http";
+import * as express from "express";
 
 const app = express();
-const httpServer = createServer(app);
 
 declare module "http" {
   interface IncomingMessage {
@@ -14,7 +10,7 @@ declare module "http" {
 
 app.use(
   express.json({
-    verify: (req, _res, buf) => {
+    verify: (req: { rawBody: any; }, _res: any, buf: any) => {
       req.rawBody = buf;
     },
   }),
@@ -33,7 +29,7 @@ export function log(message: string, source = "express") {
   console.log(`${formattedTime} [${source}] ${message}`);
 }
 
-app.use((req, res, next) => {
+app.use((req: { path: any; method: any; }, res: { json: (bodyJson: any, ...args: any[]) => any; on: (arg0: string, arg1: () => void) => void; statusCode: any; }, next: () => void) => {
   const start = Date.now();
   const path = req.path;
   let capturedJsonResponse: Record<string, any> | undefined = undefined;
