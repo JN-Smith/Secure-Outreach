@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useAuth } from "@/lib/mock-auth";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -10,25 +11,54 @@ import { Card, CardContent } from "@/components/ui/card";
 import { HeartHandshake } from "lucide-react";
 import generatedImage from '@assets/generated_images/abstract_community_connection_background.png';
 
+
 const formSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
+  username: z.string().min(2, "Username is required"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
   role: z.enum(["worker", "pastor", "admin"]),
 });
 
+
 export default function AuthPage() {
   const { login } = useAuth();
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
+      username: "",
       password: "",
       role: "worker",
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    login(values.email, values.role as any);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setError(null);
+    if (isSignUp) {
+      // Sign up
+      try {
+        const res = await fetch("/api/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(values),
+        });
+        if (!res.ok) {
+          const data = await res.json();
+          throw new Error(data.message || "Sign up failed");
+        }
+        // After sign up, auto-login
+        await login(values.username, values.password);
+      } catch (err: any) {
+        setError(err.message || "Sign up failed");
+      }
+    } else {
+      // Sign in
+      try {
+        await login(values.username, values.password);
+      } catch (err: any) {
+        setError(err.message || "Sign in failed");
+      }
+    }
   }
 
   return (
@@ -42,22 +72,27 @@ export default function AuthPage() {
                 <HeartHandshake className="h-8 w-8 text-primary-foreground" />
               </div>
             </div>
-            <h1 className="text-3xl font-heading font-bold tracking-tight text-foreground">Welcome Back</h1>
-            <p className="text-muted-foreground">Sign in to continue your outreach mission.</p>
+            <h1 className="text-3xl font-heading font-bold tracking-tight text-foreground">
+              {isSignUp ? "Create Account" : "Welcome Back"}
+            </h1>
+            <p className="text-muted-foreground">
+              {isSignUp ? "Sign up to start your outreach mission." : "Sign in to continue your outreach mission."}
+            </p>
           </div>
 
           <Card className="border-0 shadow-none bg-transparent">
             <CardContent className="p-0">
+
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                   <FormField
                     control={form.control}
-                    name="email"
+                    name="username"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Email</FormLabel>
+                        <FormLabel>Username</FormLabel>
                         <FormControl>
-                          <Input placeholder="you@church.org" className="h-11 bg-white" {...field} />
+                          <Input placeholder="your username" className="h-11 bg-white" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -98,11 +133,20 @@ export default function AuthPage() {
                       </FormItem>
                     )}
                   />
+                  {error && <div className="text-red-600 text-sm text-center">{error}</div>}
                   <Button type="submit" className="w-full h-11 text-base shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all">
-                    Sign In
+                    {isSignUp ? "Sign Up" : "Sign In"}
                   </Button>
                 </form>
               </Form>
+              <div className="mt-4 text-center text-sm">
+                <button
+                  className="text-primary hover:underline font-medium"
+                  onClick={() => { setIsSignUp((v) => !v); setError(null); }}
+                >
+                  {isSignUp ? "Already have an account? Sign In" : "Don't have an account? Sign Up"}
+                </button>
+              </div>
 
               <div className="mt-6 text-center text-sm">
                 <a href="#" className="text-primary hover:underline font-medium">

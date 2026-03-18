@@ -1,18 +1,17 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 import { useLocation } from "wouter";
 
-type UserRole = "admin" | "pastor" | "worker";
+type UserRole = "admin" | "pastor" | "worker" | "evangelist" | "data_collector";
 
 interface User {
   id: string;
-  name: string;
-  email: string;
+  username: string;
   role: UserRole;
 }
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, role: UserRole) => void;
+  login: (username: string, password: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -22,15 +21,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [, setLocation] = useLocation();
 
-  const login = (email: string, role: UserRole) => {
-    // Mock login
-    setUser({
-      id: "1",
-      name: email.split("@")[0],
-      email,
-      role,
-    });
-    setLocation("/");
+  const login = async (username: string, password: string) => {
+    try {
+      const res = await fetch("/api/signin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+      if (!res.ok) {
+        throw new Error("Invalid credentials");
+      }
+      const data = await res.json();
+      setUser({ id: data.id, username: data.username, role: data.role });
+      setLocation("/");
+    } catch (err) {
+      throw err;
+    }
   };
 
   const logout = () => {
