@@ -49,7 +49,6 @@ function Router() {
 
   return <AuthenticatedApp />;
 }
-}
 
 function App() {
   return (
