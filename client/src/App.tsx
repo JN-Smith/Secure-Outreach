@@ -10,6 +10,7 @@ import { ContactsProvider } from "@/lib/contacts-context";
 
 // Pages
 import AuthPage from "@/pages/auth-page";
+import SignUpPage from "@/pages/signup-page";
 import DashboardPage from "@/pages/dashboard-page";
 import ContactsPage from "@/pages/contacts-page";
 import ContactFormPage from "@/pages/contact-form-page";
@@ -29,22 +30,18 @@ function AuthenticatedApp() {
   );
 }
 
-function Router() {
   const { user } = useAuth();
   const [location] = useLocation();
 
-  // Simple protection check
-  if (!user && location !== "/auth") {
+  // If not logged in, show auth or signup page
+  if (!user) {
+    if (location === "/signup") return <SignUpPage />;
     return <AuthPage />;
   }
 
-  if (user && location === "/auth") {
-    // If logged in and trying to access auth, redirect to dash
+  // If logged in and on auth/signup, redirect to dashboard
+  if (user && (location === "/auth" || location === "/signup")) {
     return <AuthenticatedApp />;
-  }
-
-  if (location === "/auth") {
-    return <AuthPage />;
   }
 
   return <AuthenticatedApp />;
