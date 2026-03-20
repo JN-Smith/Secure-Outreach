@@ -17,7 +17,7 @@ const formSchema = z.object({
 });
 
 export default function SignUpPage() {
-  const { login } = useAuth();
+  const { signup } = useAuth();
   const [error, setError] = useState<string | null>(null);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -31,17 +31,7 @@ export default function SignUpPage() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setError(null);
     try {
-      const res = await fetch("/api/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.message || "Sign up failed");
-      }
-      // After sign up, auto-login
-      await login(values.username, values.password);
+      await signup(values.username, values.password, values.role);
     } catch (err: any) {
       setError(err.message || "Sign up failed");
     }

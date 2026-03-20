@@ -14,7 +14,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { VisuallyHidden } from (@radix-ui/react-visually-hidden);
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();

@@ -20,7 +20,7 @@ const formSchema = z.object({
 
 
 export default function AuthPage() {
-  const { login } = useAuth();
+  const { login, signup } = useAuth();
   const [isSignUp, setIsSignUp] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const form = useForm<z.infer<typeof formSchema>>({
@@ -35,24 +35,12 @@ export default function AuthPage() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setError(null);
     if (isSignUp) {
-      // Sign up
       try {
-        const res = await fetch("/api/signup", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(values),
-        });
-        if (!res.ok) {
-          const data = await res.json();
-          throw new Error(data.message || "Sign up failed");
-        }
-        // After sign up, auto-login
-        await login(values.username, values.password);
+        await signup(values.username, values.password, values.role);
       } catch (err: any) {
         setError(err.message || "Sign up failed");
       }
     } else {
-      // Sign in
       try {
         await login(values.username, values.password);
       } catch (err: any) {
