@@ -5,7 +5,7 @@ type UserRole = "admin" | "pastor" | "evangelist" | "data_collector";
 
 interface User {
   id: string;
-  username: string;
+  email: string;
   role: UserRole;
 }
 
@@ -15,52 +15,32 @@ interface InternalUser extends User {
 
 interface AuthContextType {
   user: User | null;
-  login: (username: string, password: string) => Promise<void>;
-  signup: (username: string, password: string, role: UserRole) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => void;
 }
 
 const DEFAULT_USERS: InternalUser[] = [
-  { id: "1", username: "admin", password: "admin123", role: "admin" },
-  { id: "2", username: "pastor", password: "pastor123", role: "pastor" },
-  { id: "3", username: "evangelist", password: "evangelist123", role: "evangelist" },
+  { id: "1", email: "admin@manifest.ke", password: "admin123", role: "admin" },
+  { id: "2", email: "pastor@manifest.ke", password: "pastor123", role: "pastor" },
+  { id: "3", email: "evangelist@manifest.ke", password: "evangelist123", role: "evangelist" },
 ];
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [users, setUsers] = useState<InternalUser[]>(DEFAULT_USERS);
   const [, setLocation] = useLocation();
 
-  const login = async (username: string, password: string) => {
-    const found = users.find(
-      (u) => u.username === username && u.password === password,
+  const login = async (email: string, password: string) => {
+    const found = DEFAULT_USERS.find(
+      (u) => u.email === email && u.password === password,
     );
 
     if (!found) {
       throw new Error("Invalid credentials");
     }
 
-    setUser({ id: found.id, username: found.username, role: found.role });
-    setLocation("/");
-  };
-
-  const signup = async (username: string, password: string, role: UserRole) => {
-    const existing = users.find((u) => u.username === username);
-    if (existing) {
-      throw new Error("Username already exists");
-    }
-
-    const newUser: InternalUser = {
-      id: Math.random().toString(36).slice(2),
-      username,
-      password,
-      role,
-    };
-
-    setUsers((prev) => [...prev, newUser]);
-    setUser({ id: newUser.id, username: newUser.username, role: newUser.role });
+    setUser({ id: found.id, email: found.email, role: found.role });
     setLocation("/");
   };
 
@@ -70,7 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
