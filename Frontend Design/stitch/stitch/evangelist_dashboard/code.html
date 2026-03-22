@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Evangelist Dashboard - Manifest Kenya</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-fixed": "#d4e3ff",
+              "surface-container-highest": "#e1e3e4",
+              "tertiary": "#110200",
+              "on-secondary-fixed-variant": "#574500",
+              "inverse-on-surface": "#f0f1f2",
+              "surface-variant": "#e1e3e4",
+              "secondary-fixed": "#ffe088",
+              "on-primary-fixed": "#001c3a",
+              "tertiary-fixed": "#ffdbce",
+              "surface-bright": "#f8f9fa",
+              "background": "#f8f9fa",
+              "surface-tint": "#476083",
+              "error": "#ba1a1a",
+              "primary-container": "#001f3f",
+              "inverse-primary": "#afc8f0",
+              "outline": "#74777f",
+              "on-primary": "#ffffff",
+              "on-tertiary-fixed-variant": "#6b3a25",
+              "on-background": "#191c1d",
+              "on-error": "#ffffff",
+              "on-primary-container": "#6f88ad",
+              "primary": "#000613",
+              "secondary-fixed-dim": "#e9c349",
+              "on-secondary": "#ffffff",
+              "error-container": "#ffdad6",
+              "on-error-container": "#93000a",
+              "surface-container-lowest": "#ffffff",
+              "on-surface": "#191c1d",
+              "on-secondary-fixed": "#241a00",
+              "on-tertiary-container": "#b5785f",
+              "on-surface-variant": "#43474e",
+              "surface-dim": "#d9dadb",
+              "inverse-surface": "#2e3132",
+              "primary-fixed-dim": "#afc8f0",
+              "surface": "#f8f9fa",
+              "tertiary-fixed-dim": "#fdb69a",
+              "on-tertiary": "#ffffff",
+              "on-primary-fixed-variant": "#2f486a",
+              "on-secondary-container": "#745c00",
+              "outline-variant": "#c4c6cf",
+              "secondary": "#735c00",
+              "secondary-container": "#fed65b",
+              "surface-container": "#edeeef",
+              "surface-container-low": "#f3f4f5",
+              "surface-container-high": "#e7e8e9",
+              "on-tertiary-fixed": "#351002",
+              "tertiary-container": "#391303"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      h1, h2, h3 {
+        font-family: 'Manrope', sans-serif;
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-[#f8f9fa] dark:bg-[#000613] text-[#001f3f] dark:text-[#f3f4f5] docked full-width top-0 sticky z-50 bg-[#e1e3e4]/80 backdrop-blur-md flex justify-between items-center w-full px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Profile picture of the logged-in user" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDg9Fk4AISfedKuRhPyfOdjWBB7nx_gUTDrlwMjsCrNaM1BBckqO8euyChCU20Z551uNsPTffZ3lLOqh5XPwRAamYRI5lJEwsCuT_6j7QC9vUMlsrxEAxkmrjLDQismzlDzW_Zmo_UtG0wjyhNEtNZHGDhhuhYQiwAIkGfhmxaBUMDJOLFZ5Y4bJzjjLOS6XFMt7b9BgNun07ZoW0qta-qjyZaxyA4iQb6od81YIdCvFKY1ksK6xK6mstl9zs6hnVFYOUN89jr0kG4"/>
+</div>
+<div class="flex flex-col">
+<span class="font-['Manrope'] font-bold text-sm tracking-tight leading-none text-primary">K. Mwangi</span>
+<span class="text-[10px] font-bold uppercase tracking-widest text-secondary">Evangelist</span>
+</div>
+</div>
+<div class="text-xl font-black text-[#000613] dark:text-white uppercase tracking-widest">
+            Manifest Kenya
+        </div>
+<button class="hover:bg-[#f3f4f5] dark:hover:bg-[#001f3f] transition-colors p-2 rounded-full">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</header>
+<main class="flex-1 px-6 pt-8 pb-32 max-w-4xl mx-auto w-full">
+<!-- Mission Overview Hero Section -->
+<section class="mb-10">
+<h1 class="text-display-sm font-extrabold text-primary mb-2 tracking-tight">Mission Overview</h1>
+<p class="text-on-surface-variant font-body">Impact for the week of September 12th — Nairobi Central.</p>
+</section>
+<!-- Bento Grid Metrics -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+<!-- Main Metric: Total Spoken To -->
+<div class="md:col-span-2 bg-surface-container-lowest p-8 rounded-xl flex flex-col justify-between shadow-[0_12px_32px_rgba(0,31,63,0.06)]">
+<div>
+<span class="text-label-md font-bold text-secondary uppercase tracking-[0.2em] mb-4 block">Total Outreach</span>
+<div class="text-7xl font-black text-primary tracking-tighter">142</div>
+</div>
+<div class="mt-8 flex items-center gap-2 text-on-surface-variant font-medium">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+<span>12% increase from last session</span>
+</div>
+</div>
+<!-- Breakdown Column -->
+<div class="bg-primary text-white p-8 rounded-xl flex flex-col justify-center space-y-6 shadow-[0_12px_32px_rgba(0,31,63,0.1)]">
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-[10px] font-bold uppercase tracking-widest opacity-60">Saved</span>
+<span class="text-3xl font-bold">84</span>
+</div>
+<div class="w-10 h-1 flex bg-secondary-fixed-dim rounded-full"></div>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-[10px] font-bold uppercase tracking-widest opacity-60">Unsure</span>
+<span class="text-3xl font-bold">39</span>
+</div>
+<div class="w-10 h-1 bg-surface-container-highest/30 rounded-full"></div>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-[10px] font-bold uppercase tracking-widest opacity-60">Not Saved</span>
+<span class="text-3xl font-bold">19</span>
+</div>
+<div class="w-10 h-1 bg-error rounded-full opacity-60"></div>
+</div>
+</div>
+</div>
+<!-- Call to Action -->
+<div class="mb-12">
+<button class="w-full bg-primary-container text-on-primary h-16 rounded-xl font-bold text-lg flex items-center justify-center gap-3 active:scale-[0.98] transition-all shadow-lg">
+<span class="material-symbols-outlined" data-icon="add_circle" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+                Record New Outreach
+            </button>
+</div>
+<!-- Recent Entries: The Ledger -->
+<section>
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-2xl font-black text-primary tracking-tight">Recent Entries</h2>
+<button class="text-secondary font-bold text-sm hover:underline">View All</button>
+</div>
+<div class="bg-surface-container-low rounded-2xl overflow-hidden p-2">
+<div class="space-y-1">
+<!-- Entry 1 -->
+<div class="bg-surface-container-lowest p-5 flex items-center justify-between hover:bg-surface-container-high transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-surface-container rounded-full flex items-center justify-center text-primary font-bold text-lg">
+                                SN
+                            </div>
+<div class="flex flex-col">
+<span class="font-bold text-primary">Samuel Njenga</span>
+<span class="text-xs text-on-surface-variant font-medium">Recorded at 2:45 PM</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="px-3 py-1 bg-secondary-fixed text-on-secondary-fixed text-[10px] font-black uppercase rounded-full">Saved</span>
+<span class="text-[10px] text-on-surface-variant mt-1">Sept 14, 2023</span>
+</div>
+</div>
+<!-- Entry 2 -->
+<div class="bg-surface-container-lowest p-5 flex items-center justify-between hover:bg-surface-container-high transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-surface-container rounded-full flex items-center justify-center text-primary font-bold text-lg">
+                                AW
+                            </div>
+<div class="flex flex-col">
+<span class="font-bold text-primary">Alice Wambui</span>
+<span class="text-xs text-on-surface-variant font-medium">Recorded at 1:12 PM</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="px-3 py-1 bg-surface-container-highest text-on-surface-variant text-[10px] font-black uppercase rounded-full">Unsure</span>
+<span class="text-[10px] text-on-surface-variant mt-1">Sept 14, 2023</span>
+</div>
+</div>
+<!-- Entry 3 -->
+<div class="bg-surface-container-lowest p-5 flex items-center justify-between hover:bg-surface-container-high transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-surface-container rounded-full flex items-center justify-center text-primary font-bold text-lg">
+                                JO
+                            </div>
+<div class="flex flex-col">
+<span class="font-bold text-primary">John Onyango</span>
+<span class="text-xs text-on-surface-variant font-medium">Recorded at 11:30 AM</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="px-3 py-1 bg-secondary-fixed text-on-secondary-fixed text-[10px] font-black uppercase rounded-full">Saved</span>
+<span class="text-[10px] text-on-surface-variant mt-1">Sept 14, 2023</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-[#e1e3e4]/80 dark:bg-[#001f3f]/80 text-[#000613] dark:text-white fixed bottom-0 w-full z-50 backdrop-blur-xl rounded-t-3xl shadow-[0_-12px_32px_rgba(0,31,63,0.06)]">
+<!-- Dashboard (Active) -->
+<a class="flex flex-col items-center justify-center bg-[#001f3f] dark:bg-[#e9c349] text-white dark:text-[#000613] rounded-xl px-5 py-2 scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-['Inter'] text-[11px] font-semibold uppercase tracking-tighter mt-1">Dashboard</span>
+</a>
+<!-- Teams -->
+<a class="flex flex-col items-center justify-center text-[#43474e] dark:text-[#c4c6cf] px-5 py-2 hover:text-[#735c00] transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-['Inter'] text-[11px] font-semibold uppercase tracking-tighter mt-1">Teams</span>
+</a>
+<!-- Outreach -->
+<a class="flex flex-col items-center justify-center text-[#43474e] dark:text-[#c4c6cf] px-5 py-2 hover:text-[#735c00] transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="edit_document">edit_document</span>
+<span class="font-['Inter'] text-[11px] font-semibold uppercase tracking-tighter mt-1">Outreach</span>
+</a>
+<!-- Settings -->
+<a class="flex flex-col items-center justify-center text-[#43474e] dark:text-[#c4c6cf] px-5 py-2 hover:text-[#735c00] transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-['Inter'] text-[11px] font-semibold uppercase tracking-tighter mt-1">Settings</span>
+</a>
+</nav>
+</body></html>

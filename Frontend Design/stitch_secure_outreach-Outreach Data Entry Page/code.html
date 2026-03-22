@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>The Serene Steward | Outreach Data Entry</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary": "#142230",
+              "secondary": "#475f84",
+              "on-error-container": "#93000a",
+              "surface-dim": "#d7dadc",
+              "on-background": "#181c1e",
+              "on-surface-variant": "#43474e",
+              "surface-container-highest": "#e0e3e5",
+              "primary-fixed": "#d6e3ff",
+              "on-tertiary": "#ffffff",
+              "on-secondary-container": "#425b7f",
+              "secondary-fixed": "#d5e3ff",
+              "on-secondary-fixed": "#001c3b",
+              "surface-container-lowest": "#ffffff",
+              "error": "#ba1a1a",
+              "secondary-fixed-dim": "#afc8f2",
+              "surface-bright": "#f7fafc",
+              "on-tertiary-fixed-variant": "#3b4857",
+              "primary-container": "#0f3566",
+              "surface-variant": "#e0e3e5",
+              "surface-container-high": "#e5e9eb",
+              "tertiary-container": "#2a3746",
+              "on-secondary-fixed-variant": "#2f476b",
+              "on-primary-container": "#809fd7",
+              "inverse-surface": "#2d3133",
+              "background": "#f7fafc",
+              "on-tertiary-fixed": "#0f1d2a",
+              "on-primary": "#ffffff",
+              "surface-container": "#ebeef0",
+              "surface": "#f7fafc",
+              "secondary-container": "#bad3fe",
+              "error-container": "#ffdad6",
+              "on-primary-fixed": "#001b3d",
+              "on-secondary": "#ffffff",
+              "on-surface": "#181c1e",
+              "surface-container-low": "#f1f4f6",
+              "primary": "#002046",
+              "inverse-on-surface": "#eef1f3",
+              "outline-variant": "#c4c6cf",
+              "inverse-primary": "#a9c7ff",
+              "primary-fixed-dim": "#a9c7ff",
+              "outline": "#74777f",
+              "surface-tint": "#3f5f92",
+              "tertiary-fixed": "#d6e4f7",
+              "on-tertiary-container": "#92a0b2",
+              "on-primary-fixed-variant": "#254778",
+              "tertiary-fixed-dim": "#bac8da",
+              "on-error": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .editorial-gradient {
+            background: linear-gradient(135deg, #002046 0%, #0f3566 100%);
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(24px);
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface">
+<!-- Side Navigation (Predicted Shell) -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-slate-50 border-r-0 flex flex-col p-4 space-y-2 z-40 hidden md:flex">
+<div class="mb-8 px-4">
+<h1 class="text-lg font-black tracking-tighter text-blue-900">The Serene Steward</h1>
+<p class="text-xs text-slate-500 font-medium">Digital Sanctuary</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center space-x-3 text-slate-500 px-4 py-3 hover:bg-blue-50/50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-semibold text-sm font-headline">Dashboard</span>
+</a>
+<a class="flex items-center space-x-3 bg-white text-blue-900 rounded-lg px-4 py-3 shadow-sm shadow-blue-900/5" href="#">
+<span class="material-symbols-outlined" data-icon="campaign">campaign</span>
+<span class="font-semibold text-sm font-headline">Outreach</span>
+</a>
+<a class="flex items-center space-x-3 text-slate-500 px-4 py-3 hover:bg-blue-50/50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-semibold text-sm font-headline">Groups</span>
+</a>
+<a class="flex items-center space-x-3 text-slate-500 px-4 py-3 hover:bg-blue-50/50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="library_books">library_books</span>
+<span class="font-semibold text-sm font-headline">Resources</span>
+</a>
+<a class="flex items-center space-x-3 text-slate-500 px-4 py-3 hover:bg-blue-50/50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-semibold text-sm font-headline">Reports</span>
+</a>
+</nav>
+<div class="pt-4 mt-4 border-t border-slate-200/50 space-y-1">
+<a class="flex items-center space-x-3 text-slate-500 px-4 py-3 hover:bg-blue-50/50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-semibold text-sm font-headline">Help Center</span>
+</a>
+<a class="flex items-center space-x-3 text-slate-500 px-4 py-3 hover:bg-blue-50/50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-semibold text-sm font-headline">Sign Out</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="md:ml-64 min-h-screen">
+<!-- Header Section -->
+<header class="sticky top-0 z-30 bg-white/80 backdrop-blur-xl px-6 py-4 flex justify-between items-center shadow-sm shadow-blue-900/5">
+<div class="flex flex-col">
+<h2 class="font-headline font-extrabold text-2xl text-primary tracking-tight">Outreach Intake</h2>
+<nav class="flex items-center space-x-2 text-xs text-on-surface-variant mt-1">
+<span>Records</span>
+<span class="material-symbols-outlined text-[12px]" data-icon="chevron_right">chevron_right</span>
+<span class="font-semibold text-primary">New Entry</span>
+</nav>
+</div>
+<div class="flex items-center space-x-4">
+<button class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="h-10 w-10 rounded-full overflow-hidden border-2 border-primary-fixed">
+<img class="w-full h-full object-cover" data-alt="Admin user avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJvvfw4hgNkFxCDmF3QXFt6yTEtnwE_hT0dkNZjG3EcJQVZ58FwlqnJFnr5FyGNkgiqHItdtSIthuMUTOOO6hflc68GdkVN-tAiRpywB10Ze6NrRjnjHMPtq8ott5GdfDNMVK94IwEsvC2E52V5JNBVdn9zwI_KmIFGJhDQYRNXxSZE82SQ6HH-GVEO0ei1hpNED5pSO2XnEBS5aTr9acPzHgJfcYQdscFbfkjhrpsWUI6Q2ZGUZG2eSqvKlMMdmGvon3v-9lP6ao"/>
+</div>
+</div>
+</header>
+<section class="max-w-5xl mx-auto p-8 lg:p-12">
+<!-- Asymmetric Editorial Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+<!-- Left Column: Form Progress & Content Title -->
+<div class="lg:col-span-4">
+<div class="sticky top-32">
+<h3 class="font-headline font-bold text-4xl text-primary leading-tight mb-6">Capturing <br/>Faith Journeys</h3>
+<p class="text-on-surface-variant mb-10 leading-relaxed">Ensure every detail is recorded with grace. This data helps our pastoral team provide tailored discipleship for every seeker.</p>
+<!-- Step Indicators -->
+<div class="space-y-8 relative">
+<div class="absolute left-[11px] top-2 bottom-2 w-[2px] bg-primary-fixed"></div>
+<div class="relative flex items-center space-x-4">
+<div class="w-6 h-6 rounded-full editorial-gradient flex items-center justify-center text-white z-10">
+<span class="material-symbols-outlined text-[14px]" data-icon="check">check</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline text-sm font-bold text-primary">Personal Identity</span>
+<span class="text-xs text-on-surface-variant">Basic contact and demographics</span>
+</div>
+</div>
+<div class="relative flex items-center space-x-4">
+<div class="w-6 h-6 rounded-full border-2 border-primary bg-white z-10 flex items-center justify-center">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+</div>
+<div class="flex flex-col">
+<span class="font-headline text-sm font-bold text-primary">Spiritual Profile</span>
+<span class="text-xs text-on-surface-variant">Faith status and background</span>
+</div>
+</div>
+<div class="relative flex items-center space-x-4">
+<div class="w-6 h-6 rounded-full bg-surface-container-high z-10"></div>
+<div class="flex flex-col">
+<span class="font-headline text-sm font-semibold text-on-surface-variant">Academic Context</span>
+<span class="text-xs text-on-surface-variant opacity-60">Education and location details</span>
+</div>
+</div>
+<div class="relative flex items-center space-x-4">
+<div class="w-6 h-6 rounded-full bg-surface-container-high z-10"></div>
+<div class="flex flex-col">
+<span class="font-headline text-sm font-semibold text-on-surface-variant">Follow-up Plan</span>
+<span class="text-xs text-on-surface-variant opacity-60">Preferences and prayer needs</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: The Form -->
+<div class="lg:col-span-8 space-y-10">
+<!-- Section 1: Personal Info -->
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-sm">
+<div class="flex items-center space-x-3 mb-8">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</div>
+<h4 class="font-headline font-bold text-lg text-primary">Personal Identity</h4>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="md:col-span-2">
+<label class="block text-sm font-semibold text-on-surface-variant mb-2">Full Name</label>
+<input class="w-full bg-surface-container border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:bg-white transition-all" placeholder="Enter given and family names" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-semibold text-on-surface-variant mb-2">Phone / Email</label>
+<input class="w-full bg-surface-container border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:bg-white transition-all" placeholder="Contact details" type="text"/>
+</div>
+<div class="flex items-end pb-3">
+<label class="flex items-center space-x-3 cursor-pointer group">
+<input class="w-5 h-5 rounded border-none bg-surface-container text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-xs text-on-surface-variant group-hover:text-primary transition-colors">Grant consent for communication</span>
+</label>
+</div>
+<div>
+<label class="block text-sm font-semibold text-on-surface-variant mb-2">Gender Identity</label>
+<div class="flex space-x-2">
+<button class="flex-1 bg-surface-container py-2 text-xs font-semibold rounded-lg hover:bg-primary hover:text-white transition-colors">Male</button>
+<button class="flex-1 bg-surface-container py-2 text-xs font-semibold rounded-lg hover:bg-primary hover:text-white transition-colors">Female</button>
+<button class="flex-1 bg-surface-container py-2 text-xs font-semibold rounded-lg hover:bg-primary hover:text-white transition-colors">Other</button>
+</div>
+</div>
+<div>
+<label class="block text-sm font-semibold text-on-surface-variant mb-2">Age Range</label>
+<select class="w-full bg-surface-container border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:bg-white transition-all appearance-none">
+<option>Select Range</option>
+<option>Under 18</option>
+<option>18-24</option>
+<option>25-34</option>
+<option>35-44</option>
+<option>45+</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Section 2: Spiritual Info -->
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-sm">
+<div class="flex items-center space-x-3 mb-8">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<h4 class="font-headline font-bold text-lg text-primary">Spiritual Profile</h4>
+</div>
+<div class="space-y-6">
+<div>
+<label class="block text-sm font-semibold text-on-surface-variant mb-4">Salvation Status</label>
+<div class="grid grid-cols-3 gap-4">
+<label class="relative cursor-pointer">
+<input class="peer sr-only" name="salvation" type="radio"/>
+<div class="flex flex-col items-center justify-center p-4 rounded-xl border-2 border-transparent bg-green-50 text-green-700 peer-checked:border-green-600 transition-all">
+<span class="material-symbols-outlined mb-1" data-icon="check_circle" data-weight="fill">check_circle</span>
+<span class="text-xs font-bold">Saved</span>
+</div>
+</label>
+<label class="relative cursor-pointer">
+<input class="peer sr-only" name="salvation" type="radio"/>
+<div class="flex flex-col items-center justify-center p-4 rounded-xl border-2 border-transparent bg-red-50 text-red-700 peer-checked:border-red-600 transition-all">
+<span class="material-symbols-outlined mb-1" data-icon="cancel" data-weight="fill">cancel</span>
+<span class="text-xs font-bold">Not Saved</span>
+</div>
+</label>
+<label class="relative cursor-pointer">
+<input class="peer sr-only" name="salvation" type="radio"/>
+<div class="flex flex-col items-center justify-center p-4 rounded-xl border-2 border-transparent bg-yellow-50 text-yellow-700 peer-checked:border-yellow-600 transition-all">
+<span class="material-symbols-outlined mb-1" data-icon="help" data-weight="fill">help</span>
+<span class="text-xs font-bold">Unsure</span>
+</div>
+</label>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block text-sm font-semibold text-on-surface-variant mb-2">Current Church Attended</label>
+<input class="w-full bg-surface-container border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:bg-white transition-all" placeholder="Enter church name if any" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-semibold text-on-surface-variant mb-2">Discipleship Status</label>
+<select class="w-full bg-surface-container border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:bg-white transition-all appearance-none">
+<option>Not started</option>
+<option>Initial journey</option>
+<option>Ongoing mentorship</option>
+<option>Leader training</option>
+</select>
+</div>
+<div class="md:col-span-2">
+<label class="block text-sm font-semibold text-on-surface-variant mb-3">Baptized?</label>
+<div class="flex space-x-4">
+<label class="flex items-center space-x-2 cursor-pointer">
+<input class="w-4 h-4 text-primary focus:ring-primary border-none bg-surface-container" name="baptized" type="radio"/>
+<span class="text-sm font-medium">Yes</span>
+</label>
+<label class="flex items-center space-x-2 cursor-pointer">
+<input class="w-4 h-4 text-primary focus:ring-primary border-none bg-surface-container" name="baptized" type="radio"/>
+<span class="text-sm font-medium">No</span>
+</label>
+<label class="flex items-center space-x-2 cursor-pointer">
+<input class="w-4 h-4 text-primary focus:ring-primary border-none bg-surface-container" name="baptized" type="radio"/>
+<span class="text-sm font-medium">Unsure</span>
+</label>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 3: Background & Location -->
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-sm">
+<div class="flex items-center justify-between mb-8">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="location_on">location_on</span>
+</div>
+<h4 class="font-headline font-bold text-lg text-primary">Academic Context</h4>
+</div>
+<div class="flex items-center space-x-3 bg-surface-container rounded-full px-4 py-2">
+<span class="text-xs font-bold text-on-surface-variant">Is a Student?</span>
+<button class="w-10 h-5 rounded-full bg-primary relative transition-all">
+<div class="absolute right-1 top-1 w-3 h-3 bg-white rounded-full"></div>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="md:col-span-2">
+<label class="block text-sm font-semibold text-on-surface-variant mb-2">Location / Area</label>
+<div class="relative">
+<input class="w-full bg-surface-container border-none rounded-xl pl-10 pr-4 py-3 focus:ring-2 focus:ring-primary focus:bg-white transition-all" placeholder="Search area or town..." type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-3 text-on-surface-variant text-[20px]" data-icon="search">search</span>
+</div>
+</div>
+<div class="md:col-span-2">
+<label class="block text-sm font-semibold text-on-surface-variant mb-2">Institution Name</label>
+<input class="w-full bg-surface-container border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:bg-white transition-all" placeholder="University, College or High School" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-semibold text-on-surface-variant mb-2">Course of Study</label>
+<input class="w-full bg-surface-container border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:bg-white transition-all" placeholder="Major or specialization" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-semibold text-on-surface-variant mb-2">Year / Grade</label>
+<select class="w-full bg-surface-container border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:bg-white transition-all appearance-none">
+<option>Freshman / Year 1</option>
+<option>Sophomore / Year 2</option>
+<option>Junior / Year 3</option>
+<option>Senior / Year 4+</option>
+<option>Postgraduate</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Section 4: Follow-up -->
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-sm">
+<div class="flex items-center justify-between mb-8">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="rebase_edit">rebase_edit</span>
+</div>
+<h4 class="font-headline font-bold text-lg text-primary">Follow-up Plan</h4>
+</div>
+<span class="px-3 py-1 bg-blue-100 text-blue-800 text-[10px] font-bold uppercase tracking-wider rounded">Assigned: Outreach Team</span>
+</div>
+<div class="space-y-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block text-sm font-semibold text-on-surface-variant mb-2">Preferred Contact</label>
+<select class="w-full bg-surface-container border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:bg-white transition-all appearance-none">
+<option>Voice Call</option>
+<option>WhatsApp / SMS</option>
+<option>In-person Visit</option>
+<option>Email</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-semibold text-on-surface-variant mb-2">Best Time to Connect</label>
+<select class="w-full bg-surface-container border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:bg-white transition-all appearance-none">
+<option>Morning (8am - 12pm)</option>
+<option>Afternoon (12pm - 5pm)</option>
+<option>Evening (5pm - 8pm)</option>
+</select>
+</div>
+</div>
+<div>
+<label class="block text-sm font-semibold text-on-surface-variant mb-2">Prayer Requests</label>
+<textarea class="w-full bg-surface-container border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:bg-white transition-all resize-none" placeholder="Specific areas for pastoral prayer..." rows="3"></textarea>
+</div>
+<div>
+<label class="block text-sm font-semibold text-on-surface-variant mb-2">Pastoral Notes</label>
+<textarea class="w-full bg-surface-container border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:bg-white transition-all resize-none" placeholder="General observations or immediate needs..." rows="2"></textarea>
+</div>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex items-center justify-between pt-6">
+<button class="text-on-surface-variant font-semibold px-6 py-3 hover:text-primary transition-colors">Discard Draft</button>
+<div class="flex space-x-4">
+<button class="px-8 py-3 rounded-xl border border-primary/10 text-primary font-bold hover:bg-primary-fixed transition-all">Save for Later</button>
+<button class="editorial-gradient px-12 py-3 rounded-xl text-white font-bold shadow-xl shadow-primary/20 transform hover:scale-[1.02] active:scale-[0.98] transition-all">
+                                Complete Intake
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Subtle Footer Signature -->
+<footer class="mt-16 px-6 py-8 border-t border-slate-100 flex justify-center opacity-40">
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-[16px]" data-icon="security">security</span>
+<span class="text-[10px] uppercase font-bold tracking-[0.2em]">Sanctuary Data Encryption Active</span>
+</div>
+</footer>
+</main>
+<!-- Mobile Bottom Navigation (Predicted Shell) -->
+<nav class="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-xl border-t-0 flex justify-around items-center p-3 md:hidden z-50">
+<button class="flex flex-col items-center text-slate-400">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-[10px] font-bold mt-1">Home</span>
+</button>
+<button class="flex flex-col items-center text-blue-900">
+<span class="material-symbols-outlined" data-icon="campaign" style="font-variation-settings: 'FILL' 1;">campaign</span>
+<span class="text-[10px] font-bold mt-1">Outreach</span>
+</button>
+<div class="w-12 h-12 editorial-gradient rounded-full -mt-10 flex items-center justify-center text-white shadow-lg shadow-blue-900/40">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</div>
+<button class="flex flex-col items-center text-slate-400">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="text-[10px] font-bold mt-1">Groups</span>
+</button>
+<button class="flex flex-col items-center text-slate-400">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="text-[10px] font-bold mt-1">Profile</span>
+</button>
+</nav>
+</body></html>

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Manifest Kenya Authority - System Architect Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-lowest": "#ffffff",
+              "on-secondary": "#ffffff",
+              "on-tertiary-container": "#b5785f",
+              "on-primary-container": "#6f88ad",
+              "error-container": "#ffdad6",
+              "primary-fixed-dim": "#afc8f0",
+              "on-primary": "#ffffff",
+              "secondary-fixed-dim": "#e9c349",
+              "on-tertiary-fixed-variant": "#6b3a25",
+              "on-surface": "#191c1d",
+              "inverse-primary": "#afc8f0",
+              "secondary": "#735c00",
+              "surface-container-highest": "#e1e3e4",
+              "on-error-container": "#93000a",
+              "on-background": "#191c1d",
+              "background": "#f8f9fa",
+              "outline-variant": "#c4c6cf",
+              "error": "#ba1a1a",
+              "surface-container-high": "#e7e8e9",
+              "on-secondary-fixed": "#241a00",
+              "inverse-surface": "#2e3132",
+              "surface-container": "#edeeef",
+              "primary": "#000613",
+              "outline": "#74777f",
+              "secondary-fixed": "#ffe088",
+              "secondary-container": "#fed65b",
+              "on-primary-fixed-variant": "#2f486a",
+              "tertiary-fixed": "#ffdbce",
+              "primary-fixed": "#d4e3ff",
+              "tertiary-container": "#391303",
+              "surface-tint": "#476083",
+              "tertiary": "#110200",
+              "surface-dim": "#d9dadb",
+              "on-secondary-fixed-variant": "#574500",
+              "surface-variant": "#e1e3e4",
+              "on-surface-variant": "#43474e",
+              "surface-bright": "#f8f9fa",
+              "tertiary-fixed-dim": "#fdb69a",
+              "on-tertiary-fixed": "#351002",
+              "inverse-on-surface": "#f0f1f2",
+              "primary-container": "#001f3f",
+              "surface-container-low": "#f3f4f5",
+              "on-tertiary": "#ffffff",
+              "on-primary-fixed": "#001c3a",
+              "on-secondary-container": "#745c00",
+              "surface": "#f8f9fa",
+              "on-error": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .headline-md {
+            font-family: 'Manrope', sans-serif;
+            font-size: 1.5rem;
+            line-height: 2rem;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="text-on-surface">
+<!-- TopAppBar -->
+<header class="bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-md text-slate-900 dark:text-slate-50 fixed top-0 w-full z-50 flex justify-between items-center px-8 h-20 w-full">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-2xl" data-icon="account_balance">account_balance</span>
+<h1 class="font-manrope tracking-tight font-bold headline-md text-xl font-bold tracking-tighter text-slate-900">Manifest Kenya Authority</h1>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden md:flex gap-6 items-center">
+<span class="text-slate-500 dark:text-slate-400 font-inter text-sm font-medium uppercase tracking-widest">SYSTEM ARCHITECT</span>
+<div class="h-4 w-px bg-outline-variant/20"></div>
+</div>
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container-highest flex items-center justify-center">
+<img alt="Admin User Profile" class="w-full h-full object-cover" data-alt="Portrait of a professional male administrator" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBufawWVPXdMncQZ7iEI93h6HIfVn3nSo_wu67tN6SMvvmSbX1OQAIK8vjw6DQ7x88pZXVVqE8tF3CAoy3tfQJDGuiD8wYuWIYk1HzP5Y9BlH2XxyOMGQuux_jXfHTaAXgo2GxrJztv3q_4w1oC7DzMyWjmFUYCyq17DSLCS7NXFZKaO7tvB1EK6tucOBFa6G3vI3ogQ5MDjiA7I80DsHx565BDs3puaM8LR6OP1dkHV-adLYGo-1L9IIIuOIrq6UokZ0QFZeamE4"/>
+</div>
+</div>
+</header>
+<!-- NavigationDrawer (Desktop) -->
+<aside class="hidden md:flex h-screen w-72 fixed left-0 top-0 bg-slate-50 dark:bg-slate-950 flex flex-col py-8 px-4 gap-4 border-r border-slate-200/20 dark:border-slate-800/20 z-40 pt-24">
+<div class="px-4 mb-4">
+<p class="font-inter text-sm font-medium uppercase tracking-widest text-slate-500">ADMINISTRATION</p>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white font-bold border-r-4 border-amber-600 transition-transform translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="group_add">group_add</span>
+<span class="font-inter text-sm font-medium uppercase tracking-widest">Evangelists</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+<span class="font-inter text-sm font-medium uppercase tracking-widest">Regional Config</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="database_export">file_export</span>
+<span class="font-inter text-sm font-medium uppercase tracking-widest">Data Exports</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="settings_applications">settings_applications</span>
+<span class="font-inter text-sm font-medium uppercase tracking-widest">System Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-4 opacity-10">
+<img alt="Logo Watermark" class="w-full grayscale" data-alt="Manifest Kenya subtle brand watermark" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmIMTo5eLa68k252qrsNZVT0yG0rJpd6mcXWkIbWJn5iTMgP8JcUFzTRLIVvhOrwGQILC6oFALV-Z7GVc9UxoYMfgqkY34ANuhOm5LhiJoLDJ3Gs9om-sEf_fFogs87zDKGskBsSZVjEJAP-aDVlHTQF6TdQT9kaGZkZD8XongWEP375WsXulzm0umzpB4jfitVe8pK_5v6W0n0oaNWYTJ0JFvuJH9vKUdLpPnxmp8KP4bASt7_UmPGuZXS1cBPXt_A2uPorE3ZEA"/>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="md:ml-72 pt-24 pb-24 px-6 md:px-12 min-h-screen">
+<!-- Header Section -->
+<header class="mb-12">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<h2 class="font-headline text-4xl font-extrabold text-primary tracking-tight mb-2">Architectural Overview</h2>
+<p class="font-body text-on-surface-variant max-w-2xl">Precision monitoring and regional synchronization for the Manifest Kenya mission.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-6 h-[56px] bg-primary-container text-on-primary rounded-md font-semibold text-sm hover:opacity-90 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                        Invite New Evangelist
+                    </button>
+<button class="flex items-center gap-2 px-6 h-[56px] bg-surface-container-highest text-primary rounded-md font-semibold text-sm hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="download">download</span>
+                        Export Full DB (CSV)
+                    </button>
+</div>
+</div>
+</header>
+<!-- Bento Grid Layout for Stats -->
+<section class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+<!-- Active Evangelists -->
+<div class="md:col-span-2 bg-surface-container-lowest p-8 rounded-xl shadow-[0_12px_32px_rgba(0,31,63,0.06)] flex flex-col justify-between group">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-secondary text-3xl" data-icon="groups_2">groups_2</span>
+<span class="bg-secondary-fixed text-on-secondary-fixed text-[10px] font-bold px-2 py-1 rounded">LIVE NOW</span>
+</div>
+<div>
+<p class="font-label text-on-surface-variant text-sm uppercase tracking-wider mb-1">Total Active Evangelists</p>
+<h3 class="font-headline text-5xl font-extrabold text-primary">1,248</h3>
+</div>
+<div class="mt-6 pt-6 border-t border-outline-variant/10">
+<p class="text-xs text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-green-600 text-sm" data-icon="trending_up">trending_up</span>
+                        +12% from last month
+                    </p>
+</div>
+</div>
+<!-- Total Records -->
+<div class="bg-primary text-white p-8 rounded-xl flex flex-col justify-between">
+<div class="mb-4">
+<span class="material-symbols-outlined text-primary-fixed-dim text-3xl" data-icon="database">database</span>
+</div>
+<div>
+<p class="font-label text-primary-fixed-dim/60 text-sm uppercase tracking-wider mb-1">Total Records</p>
+<h3 class="font-headline text-4xl font-extrabold text-white">48.2k</h3>
+</div>
+</div>
+<!-- System Uptime -->
+<div class="bg-surface-container-low p-8 rounded-xl flex flex-col justify-between">
+<div class="mb-4">
+<span class="material-symbols-outlined text-on-surface-variant text-3xl" data-icon="verified_user">verified_user</span>
+</div>
+<div>
+<p class="font-label text-on-surface-variant text-sm uppercase tracking-wider mb-1">System Uptime</p>
+<h3 class="font-headline text-4xl font-extrabold text-primary">99.98%</h3>
+</div>
+</div>
+</section>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+<!-- Management & Control (LHS) -->
+<div class="lg:col-span-2 space-y-12">
+<!-- Management Section -->
+<div>
+<h4 class="font-headline text-lg font-bold text-primary mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="settings_suggest">settings_suggest</span>
+                        Infrastructure Controls
+                    </h4>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="bg-surface-container-low p-6 rounded-xl border border-transparent hover:border-outline-variant/20 transition-all cursor-pointer group">
+<h5 class="font-bold text-primary mb-2 flex items-center justify-between">
+                                Manage Teams
+                                <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform" data-icon="chevron_right">chevron_right</span>
+</h5>
+<p class="text-sm text-on-surface-variant">Allocate regional leads and manage evangelist squads.</p>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl border border-transparent hover:border-outline-variant/20 transition-all cursor-pointer group">
+<h5 class="font-bold text-primary mb-2 flex items-center justify-between">
+                                Configure Regions
+                                <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform" data-icon="chevron_right">chevron_right</span>
+</h5>
+<p class="text-sm text-on-surface-variant">Define geospatial boundaries for new outreach missions.</p>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl border border-transparent hover:border-outline-variant/20 transition-all cursor-pointer group">
+<h5 class="font-bold text-primary mb-2 flex items-center justify-between">
+                                Regional Reporting
+                                <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform" data-icon="chevron_right">chevron_right</span>
+</h5>
+<p class="text-sm text-on-surface-variant">Generate localized spiritual impact statements and data.</p>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl border border-transparent hover:border-outline-variant/20 transition-all cursor-pointer group">
+<h5 class="font-bold text-primary mb-2 flex items-center justify-between">
+                                Audit Hierarchy
+                                <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform" data-icon="chevron_right">chevron_right</span>
+</h5>
+<p class="text-sm text-on-surface-variant">Review permission levels across the administrative stack.</p>
+</div>
+</div>
+</div>
+<!-- Data Ledger (Structured Table) -->
+<div>
+<h4 class="font-headline text-lg font-bold text-primary mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="list_alt">list_alt</span>
+                        Active Mission Clusters
+                    </h4>
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-high border-b border-outline-variant/10">
+<th class="px-6 py-4 font-label text-xs font-bold uppercase tracking-widest text-on-surface-variant">Region ID</th>
+<th class="px-6 py-4 font-label text-xs font-bold uppercase tracking-widest text-on-surface-variant">Cluster Name</th>
+<th class="px-6 py-4 font-label text-xs font-bold uppercase tracking-widest text-on-surface-variant">Status</th>
+<th class="px-6 py-4 font-label text-xs font-bold uppercase tracking-widest text-on-surface-variant text-right">Throughput</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/5">
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-5 font-mono text-xs text-on-surface-variant">KE-NRB-01</td>
+<td class="px-6 py-5 font-bold text-primary">Nairobi Central Hub</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-secondary-container/30 text-secondary text-[10px] font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> ACTIVE
+                                        </span>
+</td>
+<td class="px-6 py-5 text-right font-semibold text-primary">8.2k pts</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-5 font-mono text-xs text-on-surface-variant">KE-MSA-04</td>
+<td class="px-6 py-5 font-bold text-primary">Mombasa Coastal Outreach</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-secondary-container/30 text-secondary text-[10px] font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> ACTIVE
+                                        </span>
+</td>
+<td class="px-6 py-5 text-right font-semibold text-primary">4.1k pts</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-5 font-mono text-xs text-on-surface-variant">KE-KSM-02</td>
+<td class="px-6 py-5 font-bold text-primary">Kisumu Lakeside Mission</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-surface-container-high text-on-surface-variant text-[10px] font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-on-surface-variant"></span> PAUSED
+                                        </span>
+</td>
+<td class="px-6 py-5 text-right font-semibold text-primary">1.2k pts</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- System Logs (RHS) -->
+<aside>
+<div class="sticky top-24">
+<h4 class="font-headline text-lg font-bold text-primary mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+                        Administrative Logs
+                    </h4>
+<div class="bg-surface-container-low p-6 rounded-xl space-y-6">
+<div class="flex gap-4 items-start">
+<div class="mt-1 w-2 h-2 rounded-full bg-amber-600 flex-shrink-0"></div>
+<div>
+<p class="text-sm font-semibold text-primary">Pastor Kamau updated regional filters</p>
+<p class="text-[11px] text-on-surface-variant mt-1 uppercase tracking-tighter">12 MINUTES AGO • NAIROBI_HUB</p>
+</div>
+</div>
+<div class="flex gap-4 items-start">
+<div class="mt-1 w-2 h-2 rounded-full bg-slate-300 flex-shrink-0"></div>
+<div>
+<p class="text-sm font-semibold text-primary">New Evangelist account created</p>
+<p class="text-[11px] text-on-surface-variant mt-1 uppercase tracking-tighter">1 HOUR AGO • SYSTEM_BOT</p>
+</div>
+</div>
+<div class="flex gap-4 items-start">
+<div class="mt-1 w-2 h-2 rounded-full bg-slate-300 flex-shrink-0"></div>
+<div>
+<p class="text-sm font-semibold text-primary">Export: Full Database CSV</p>
+<p class="text-[11px] text-on-surface-variant mt-1 uppercase tracking-tighter">3 HOURS AGO • ARCHITECT_ROOT</p>
+</div>
+</div>
+<div class="flex gap-4 items-start">
+<div class="mt-1 w-2 h-2 rounded-full bg-red-500 flex-shrink-0"></div>
+<div>
+<p class="text-sm font-semibold text-primary">API Response Anomaly detected</p>
+<p class="text-[11px] text-on-surface-variant mt-1 uppercase tracking-tighter">5 HOURS AGO • FIREWALL_A1</p>
+</div>
+</div>
+<div class="flex gap-4 items-start">
+<div class="mt-1 w-2 h-2 rounded-full bg-slate-300 flex-shrink-0"></div>
+<div>
+<p class="text-sm font-semibold text-primary">Sync complete: Western Region</p>
+<p class="text-[11px] text-on-surface-variant mt-1 uppercase tracking-tighter">6 HOURS AGO • CRON_JOB</p>
+</div>
+</div>
+<button class="w-full py-3 text-xs font-bold uppercase tracking-widest text-secondary hover:bg-surface-container-high transition-colors rounded-lg mt-4">
+                            View All Logs
+                        </button>
+</div>
+<!-- System Status Floating Card -->
+<div class="mt-8 p-6 bg-primary-container text-white rounded-xl relative overflow-hidden">
+<div class="relative z-10">
+<h5 class="text-xs font-bold uppercase tracking-widest text-primary-fixed-dim mb-2">Engine Status</h5>
+<div class="flex items-center gap-3">
+<div class="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
+<span class="font-headline font-bold">CORE_OPERATIONAL</span>
+</div>
+<p class="text-xs text-primary-fixed-dim/60 mt-4 leading-relaxed">Latency: 14ms<br/>Cloud Nodes: 12 Active</p>
+</div>
+<span class="material-symbols-outlined absolute -bottom-4 -right-4 text-9xl opacity-5 pointer-events-none" data-icon="bolt">bolt</span>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-4 pb-safe bg-slate-50/90 dark:bg-slate-950/90 backdrop-blur-lg md:hidden border-t border-slate-200 dark:border-slate-800 shadow-2xl">
+<a class="flex flex-col items-center justify-center bg-slate-200 dark:bg-slate-800 text-amber-600 rounded-xl p-2 scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-inter text-[10px] font-bold">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 p-2 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="person_search">person_search</span>
+<span class="font-inter text-[10px] font-bold">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 p-2 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="public">public</span>
+<span class="font-inter text-[10px] font-bold">Map</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 p-2 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="cloud_download">cloud_download</span>
+<span class="font-inter text-[10px] font-bold">Exports</span>
+</a>
+</nav>
+</body></html>
