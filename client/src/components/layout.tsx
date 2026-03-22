@@ -42,7 +42,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const navigation = getNavItems(user?.role);
-  const initials = user?.username?.substring(0, 2).toUpperCase() ?? "??";
+  const initials = user?.email?.substring(0, 2).toUpperCase() ?? "??";
 
   const SidebarInner = ({ onNav }: { onNav?: () => void }) => (
     <div className="flex flex-col h-full bg-white">
@@ -83,7 +83,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             {initials}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-bold text-on-surface truncate">{user?.username}</p>
+            <p className="text-sm font-bold text-on-surface truncate">{user?.email}</p>
             <p className="text-[10px] text-secondary capitalize">{user?.role}</p>
           </div>
         </div>

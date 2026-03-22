@@ -1,4 +1,4 @@
-import { Switch, Route, useLocation } from "wouter";
+import { Switch, Route } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -10,7 +10,6 @@ import { ContactsProvider } from "@/lib/contacts-context";
 
 // Pages
 import AuthPage from "@/pages/auth-page";
-import SignUpPage from "@/pages/signup-page";
 import ContactsPage from "@/pages/contacts-page";
 import ContactFormPage from "@/pages/contact-form-page";
 import SettingsPage from "@/pages/settings-page";
@@ -41,19 +40,9 @@ function AuthenticatedApp() {
 
 function Router() {
   const { user } = useAuth();
-  const [location] = useLocation();
 
-  // If not logged in, show auth or signup page
   if (!user) {
-    if (location === "/signup") {
-      return <SignUpPage />;
-    }
     return <AuthPage />;
-  }
-
-  // If logged in and on auth/signup, redirect to dashboard
-  if (user && (location === "/auth" || location === "/signup")) {
-    return <AuthenticatedApp />;
   }
 
   return <AuthenticatedApp />;
