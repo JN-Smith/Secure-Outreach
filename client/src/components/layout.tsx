@@ -1,79 +1,74 @@
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/lib/mock-auth";
-import { 
-  LayoutDashboard, 
-  Users, 
-  UserPlus, 
-  Settings, 
-  LogOut, 
-  Menu,
-  X,
-  HeartHandshake
-} from "lucide-react";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "@/components/ui/sheet";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+
+type NavItem = { name: string; href: string; icon: string };
+
+function getNavItems(role: string | undefined): NavItem[] {
+  if (role === "evangelist") {
+    return [
+      { name: "My Dashboard", href: "/", icon: "person_pin" },
+      { name: "My Contacts", href: "/contacts", icon: "contacts" },
+      { name: "New Contact", href: "/contacts/new", icon: "person_add" },
+    ];
+  }
+  if (role === "pastor") {
+    return [
+      { name: "Ministry Overview", href: "/", icon: "church" },
+      { name: "All Contacts", href: "/contacts", icon: "contacts" },
+      { name: "Settings", href: "/settings", icon: "settings" },
+    ];
+  }
+  return [
+    { name: "Dashboard", href: "/", icon: "dashboard" },
+    { name: "All Contacts", href: "/contacts", icon: "contacts" },
+    { name: "New Contact", href: "/contacts/new", icon: "person_add" },
+    { name: "Settings", href: "/settings", icon: "settings" },
+  ];
+}
+
+function roleLabel(role: string | undefined) {
+  if (role === "evangelist") return "Evangelist";
+  if (role === "pastor") return "Pastor";
+  if (role === "admin") return "Admin";
+  return "";
+}
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
   const { user, logout } = useAuth();
-  const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-  const navigation = [
-    { name: "Dashboard", href: "/", icon: LayoutDashboard },
-    { name: "All Contacts", href: "/contacts", icon: Users },
-    { name: "New Entry", href: "/contacts/new", icon: UserPlus },
-    { name: "Settings", href: "/settings", icon: Settings },
-  ].filter(item => {
-    // Role-based filtering
-    if (user?.role === "evangelist") {
-      // Evangelists can't see Settings (in this simplified view) or maybe just limited settings?
-      // Actually prompt says "Evangelist: can record and view their contacts only"
-      // So maybe they shouldn't see "Dashboard" if it's aggregate? 
-      // Let's keep Dashboard but maybe simplify it later.
-      // Let's hide Settings for now as a difference.
-      return item.name !== "Settings";
-    }
-    if (user?.role === "pastor") {
-      // Pastor: "view aggregated reports"
-      // Maybe hide "New Entry" if they don't do outreach?
-      // Let's hide "New Entry" to show a difference.
-      return item.name !== "New Entry";
-    }
-    // Admin sees everything
-    return true;
-  });
+  const navigation = getNavItems(user?.role);
+  const initials = user?.username?.substring(0, 2).toUpperCase() ?? "??";
 
-  const SidebarContent = () => (
-    <div className="flex flex-col h-full bg-sidebar border-r border-sidebar-border">
-      <div className="p-6 flex items-center gap-3">
-        <div className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20">
-          <HeartHandshake className="h-6 w-6 text-primary-foreground" />
+  const SidebarInner = ({ onNav }: { onNav?: () => void }) => (
+    <div className="flex flex-col h-full bg-white">
+      {/* Brand */}
+      <div className="flex items-center gap-3 px-6 py-6 border-b border-outline-variant/15">
+        <div className="w-12 h-12 rounded-lg bg-primary-container flex items-center justify-center flex-shrink-0">
+          <span className="material-symbols-outlined text-on-primary-fixed text-[22px] filled">volunteer_activism</span>
         </div>
         <div>
-          <h1 className="font-heading font-bold text-lg text-sidebar-foreground leading-none">
-            {user?.role === "evangelist" ? `Evangelist ${user?.username}` : "Outreach"}
-          </h1>
-          {/* Connect tagline */}
-          <p className="text-xs text-sidebar-foreground/60 font-medium">Connect</p>
+          <p className="font-black text-on-surface text-sm leading-tight">Outreach Portal</p>
+          <p className="text-xs text-secondary">Manifest Kenya</p>
         </div>
       </div>
 
-      <nav className="flex-1 px-4 space-y-2 py-4">
+      {/* Nav */}
+      <nav className="flex flex-col gap-0.5 px-3 py-4 flex-1">
         {navigation.map((item) => {
-          const isActive = location === item.href;
+          const active = location === item.href;
           return (
-            <Link key={item.name} href={item.href}>
-              <div
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer group ${
-                  isActive
-                    ? "bg-sidebar-accent text-sidebar-accent-foreground shadow-sm"
-                    : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
-                }`}
-              >
-                <item.icon className={`h-5 w-5 ${isActive ? "text-primary" : "text-sidebar-foreground/50 group-hover:text-primary/70"}`} />
+            <Link key={item.name} href={item.href} onClick={onNav}>
+              <div className={`flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium cursor-pointer ${
+                active ? "nav-active-sp" : "nav-idle-sp"
+              }`}>
+                <span className={`material-symbols-outlined text-[20px] ${active ? "filled" : ""}`}>
+                  {item.icon}
+                </span>
                 {item.name}
               </div>
             </Link>
@@ -81,59 +76,92 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         })}
       </nav>
 
-      <div className="p-4 border-t border-sidebar-border">
-        <div className="flex items-center gap-3 mb-4 px-2">
-          <Avatar className="h-9 w-9 border border-sidebar-border">
-            <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.username}`} />
-            <AvatarFallback>{user?.username?.substring(0, 2).toUpperCase()}</AvatarFallback>
-          </Avatar>
+      {/* Footer */}
+      <div className="px-4 py-5 border-t border-outline-variant/15">
+        <div className="flex items-center gap-3 px-2 mb-3">
+          <div className="w-9 h-9 rounded-full bg-surface-container-highest flex items-center justify-center text-sm font-black text-on-surface-variant flex-shrink-0">
+            {initials}
+          </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-sidebar-foreground truncate">{user?.username}</p>
-            <p className="text-xs text-sidebar-foreground/60 truncate capitalize">{user?.role}</p>
+            <p className="text-sm font-bold text-on-surface truncate">{user?.username}</p>
+            <p className="text-[10px] text-secondary capitalize">{user?.role}</p>
           </div>
         </div>
-        <Button 
-          variant="outline" 
-          className="w-full justify-start text-sidebar-foreground/70 hover:text-destructive hover:bg-destructive/10 hover:border-destructive/20 transition-colors"
+        <button
           onClick={logout}
+          className="w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-on-surface-variant hover:bg-surface-container-low hover:translate-x-1 transition-all duration-200"
         >
-          <LogOut className="mr-2 h-4 w-4" />
+          <span className="material-symbols-outlined text-[18px]">logout</span>
           Sign Out
-        </Button>
+        </button>
+        <p className="text-[9px] text-outline/50 font-bold tracking-widest uppercase mt-4 px-2">v1.0.0</p>
       </div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-background flex">
-      {/* Desktop Sidebar */}
-      <div className="hidden md:block w-64 fixed inset-y-0 left-0 z-50">
-        <SidebarContent />
-      </div>
+    <div className="min-h-screen bg-surface">
 
-      {/* Mobile Sidebar */}
-      <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
-        <SheetTrigger asChild>
-          <Button variant="ghost" size="icon" className="md:hidden fixed top-4 left-4 z-50 bg-background/80 backdrop-blur-sm border shadow-sm">
-            <Menu className="h-5 w-5" />
-          </Button>
-        </SheetTrigger>
-        <SheetContent side="left" className="p-0 w-64 border-r-0">
-          <VisuallyHidden>
-            <SheetTitle>Navigation Menu</SheetTitle>
-            <SheetDescription>Main navigation menu for Outreach Connect</SheetDescription>
-          </VisuallyHidden>
-          <SidebarContent />
-        </SheetContent>
-      </Sheet>
+      {/* ── Top App Bar ── */}
+      <header className="fixed top-0 w-full z-50 h-16 bg-[#f6f6f6] border-b border-outline-variant/20 backdrop-blur-xl flex items-center justify-between px-6 shadow-sm shadow-black/[0.04]">
+        <div className="flex items-center gap-3">
+          {/* Mobile menu trigger */}
+          <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+            <SheetTrigger asChild>
+              <button className="md:hidden p-2 rounded-lg text-secondary hover:bg-surface-container transition-colors">
+                <span className="material-symbols-outlined">menu</span>
+              </button>
+            </SheetTrigger>
+            <SheetContent side="left" className="p-0 w-72 border-r-0">
+              <VisuallyHidden>
+                <SheetTitle>Navigation</SheetTitle>
+                <SheetDescription>Main navigation menu</SheetDescription>
+              </VisuallyHidden>
+              <SidebarInner onNav={() => setMobileOpen(false)} />
+            </SheetContent>
+          </Sheet>
 
-      {/* Main Content */}
-      <main className="flex-1 md:ml-64 min-h-screen">
+          <h1 className="text-lg font-extrabold text-on-surface tracking-tight">Manifest Kenya</h1>
+        </div>
 
-        <div className="container max-w-6xl mx-auto p-4 md:p-8 pt-20 md:pt-8 animate-in fade-in duration-500">
+        <div className="flex items-center gap-4">
+          <span className="text-sm font-bold text-primary hidden sm:block">{roleLabel(user?.role)}</span>
+          <div className="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-sm font-black text-on-surface-variant border border-outline-variant/20 overflow-hidden">
+            {initials}
+          </div>
+        </div>
+      </header>
+
+      {/* ── Desktop Sidebar ── */}
+      <aside className="hidden md:block fixed top-16 left-0 w-72 h-[calc(100vh-64px)] z-40 rounded-r-lg shadow-2xl shadow-outline-variant/10 overflow-hidden">
+        <SidebarInner />
+      </aside>
+
+      {/* ── Main Content ── */}
+      <main className="pt-16 md:pl-72 pb-24 md:pb-0">
+        <div className="max-w-6xl mx-auto p-6 md:p-10 lg:p-12">
           {children}
         </div>
       </main>
+
+      {/* ── Mobile Bottom Nav ── */}
+      <nav className="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 bg-white rounded-t-xl border-t border-outline-variant/15 shadow-[0_-4px_20px_0_rgba(81,93,105,0.06)]">
+        {navigation.slice(0, 4).map((item) => {
+          const active = location === item.href;
+          return (
+            <Link key={item.name} href={item.href}>
+              <div className={`flex flex-col items-center justify-center gap-0.5 px-3 py-1.5 rounded-xl transition-all active:scale-90 ${
+                active
+                  ? "bg-primary-container text-on-primary-fixed"
+                  : "text-secondary hover:text-primary"
+              }`}>
+                <span className={`material-symbols-outlined text-[22px] ${active ? "filled" : ""}`}>{item.icon}</span>
+                <span className="text-[9px] font-bold uppercase tracking-widest leading-none">{item.name.split(" ")[0]}</span>
+              </div>
+            </Link>
+          );
+        })}
+      </nav>
     </div>
   );
 }

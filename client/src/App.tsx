@@ -11,16 +11,25 @@ import { ContactsProvider } from "@/lib/contacts-context";
 // Pages
 import AuthPage from "@/pages/auth-page";
 import SignUpPage from "@/pages/signup-page";
-import DashboardPage from "@/pages/dashboard-page";
 import ContactsPage from "@/pages/contacts-page";
 import ContactFormPage from "@/pages/contact-form-page";
 import SettingsPage from "@/pages/settings-page";
+import EvangelistDashboard from "@/pages/evangelist-dashboard";
+import AdminDashboard from "@/pages/admin-dashboard";
+import PastorDashboard from "@/pages/pastor-dashboard";
 
 function AuthenticatedApp() {
+  const { user } = useAuth();
+
+  const DashboardComponent =
+    user?.role === "pastor" ? PastorDashboard :
+    user?.role === "admin" ? AdminDashboard :
+    EvangelistDashboard;
+
   return (
     <Layout>
       <Switch>
-        <Route path="/" component={DashboardPage} />
+        <Route path="/" component={DashboardComponent} />
         <Route path="/contacts" component={ContactsPage} />
         <Route path="/contacts/new" component={ContactFormPage} />
         <Route path="/settings" component={SettingsPage} />
