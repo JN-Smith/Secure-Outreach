@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>The Serene Steward - Pastor Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary": "#142230",
+              "secondary": "#475f84",
+              "on-error-container": "#93000a",
+              "surface-dim": "#d7dadc",
+              "on-background": "#181c1e",
+              "on-surface-variant": "#43474e",
+              "surface-container-highest": "#e0e3e5",
+              "primary-fixed": "#d6e3ff",
+              "on-tertiary": "#ffffff",
+              "on-secondary-container": "#425b7f",
+              "secondary-fixed": "#d5e3ff",
+              "on-secondary-fixed": "#001c3b",
+              "surface-container-lowest": "#ffffff",
+              "error": "#ba1a1a",
+              "secondary-fixed-dim": "#afc8f2",
+              "surface-bright": "#f7fafc",
+              "on-tertiary-fixed-variant": "#3b4857",
+              "primary-container": "#0f3566",
+              "surface-variant": "#e0e3e5",
+              "surface-container-high": "#e5e9eb",
+              "tertiary-container": "#2a3746",
+              "on-secondary-fixed-variant": "#2f476b",
+              "on-primary-container": "#809fd7",
+              "inverse-surface": "#2d3133",
+              "background": "#f7fafc",
+              "on-tertiary-fixed": "#0f1d2a",
+              "on-primary": "#ffffff",
+              "surface-container": "#ebeef0",
+              "surface": "#f7fafc",
+              "secondary-container": "#bad3fe",
+              "error-container": "#ffdad6",
+              "on-primary-fixed": "#001b3d",
+              "on-secondary": "#ffffff",
+              "on-surface": "#181c1e",
+              "surface-container-low": "#f1f4f6",
+              "primary": "#002046",
+              "inverse-on-surface": "#eef1f3",
+              "outline-variant": "#c4c6cf",
+              "inverse-primary": "#a9c7ff",
+              "primary-fixed-dim": "#a9c7ff",
+              "outline": "#74777f",
+              "surface-tint": "#3f5f92",
+              "tertiary-fixed": "#d6e4f7",
+              "on-tertiary-container": "#92a0b2",
+              "on-primary-fixed-variant": "#254778",
+              "tertiary-fixed-dim": "#bac8da",
+              "on-error": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .editorial-gradient {
+        background: linear-gradient(135deg, #002046 0%, #0f3566 100%);
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(24px);
+      }
+      .hide-scrollbar::-webkit-scrollbar { display: none; }
+      .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased">
+<!-- Navigation Shell -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-slate-50 border-r-0 flex flex-col p-4 space-y-2 z-50">
+<div class="mb-8 px-4">
+<h1 class="text-lg font-black tracking-tighter text-blue-900 font-headline">The Serene Steward</h1>
+<p class="text-xs text-slate-500 font-body">Digital Sanctuary</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center space-x-3 bg-white text-blue-900 rounded-lg px-4 py-3 shadow-sm shadow-blue-900/5 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-headline font-semibold text-sm">Dashboard</span>
+</a>
+<a class="flex items-center space-x-3 text-slate-500 px-4 py-3 hover:bg-blue-50/50 hover:text-blue-700 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="campaign">campaign</span>
+<span class="font-headline font-semibold text-sm">Outreach</span>
+</a>
+<a class="flex items-center space-x-3 text-slate-500 px-4 py-3 hover:bg-blue-50/50 hover:text-blue-700 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-headline font-semibold text-sm">Groups</span>
+</a>
+<a class="flex items-center space-x-3 text-slate-500 px-4 py-3 hover:bg-blue-50/50 hover:text-blue-700 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="library_books">library_books</span>
+<span class="font-headline font-semibold text-sm">Resources</span>
+</a>
+<a class="flex items-center space-x-3 text-slate-500 px-4 py-3 hover:bg-blue-50/50 hover:text-blue-700 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-headline font-semibold text-sm">Reports</span>
+</a>
+<a class="flex items-center space-x-3 text-slate-500 px-4 py-3 hover:bg-blue-50/50 hover:text-blue-700 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="tune">tune</span>
+<span class="font-headline font-semibold text-sm">Settings</span>
+</a>
+</nav>
+<div class="mt-auto pt-4 border-t border-slate-200/50 space-y-1">
+<button class="w-full editorial-gradient text-white rounded-xl py-3 px-4 font-semibold text-sm shadow-lg shadow-blue-900/10 mb-4 flex items-center justify-center space-x-2">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+<span>New Outreach</span>
+</button>
+<a class="flex items-center space-x-3 text-slate-500 px-4 py-2 hover:text-blue-700 text-sm" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span>Help Center</span>
+</a>
+<a class="flex items-center space-x-3 text-slate-500 px-4 py-2 hover:text-red-600 text-sm" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>Sign Out</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 min-h-screen p-8 lg:p-12">
+<!-- Top App Bar -->
+<header class="flex justify-between items-center mb-12">
+<div>
+<h2 class="text-4xl font-extrabold tracking-tight text-primary font-headline">Ministry Overview</h2>
+<p class="text-on-surface-variant font-body mt-2">Curating growth and grace across your community.</p>
+</div>
+<div class="flex items-center space-x-4">
+<div class="relative">
+<button class="p-2 bg-white rounded-full shadow-sm text-slate-600 hover:bg-slate-50">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full border-2 border-white"></span>
+</div>
+<div class="h-10 w-10 rounded-full bg-primary-fixed overflow-hidden border-2 border-white shadow-sm">
+<img alt="Pastor Avatar" class="w-full h-full object-cover" data-alt="Portrait of a smiling mature pastor" src="https://lh3.googleusercontent.com/aida-public/AB6AXuANSK2cJ7W3o4zbRzfkafjPnf4WbnXzmtscyo1Q0mNdx877tqVHeeVKni9Rp_kd8Q4nasAFRn8uzcvTCPeCjV9SY5ZHNr20ljBYhErdazBHL_hlhGsN6pvdapE12xmGR7PUOqXPDuBpDiINg196BuaMUc-8xe4i_AvitiqoyhuO4NslqIDcg2_0I6f2C7Ol8dzwA12j4c9QSf4YfuXWa9yZTonefCNIuS-W-pl28KYHY5_H3Yqlil-7jFMu7lAbunXOS5I8s-yTVmU"/>
+</div>
+</div>
+</header>
+<!-- Top Metrics: Editorial Asymmetry -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-transparent hover:border-outline-variant/20 transition-all group">
+<div class="flex items-center justify-between mb-4">
+<span class="p-2 bg-blue-50 text-blue-700 rounded-lg group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="person_add">person_add</span>
+</span>
+<span class="text-xs font-semibold text-blue-600">+12%</span>
+</div>
+<p class="text-label-sm text-on-surface-variant font-medium">Total People Reached</p>
+<h3 class="text-3xl font-bold text-primary font-headline mt-1">12,482</h3>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-transparent hover:border-outline-variant/20 transition-all group">
+<div class="flex items-center justify-between mb-4">
+<span class="p-2 bg-green-50 text-green-700 rounded-lg group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="volunteer_activism">volunteer_activism</span>
+</span>
+<span class="text-xs font-semibold text-green-600">+4.2%</span>
+</div>
+<p class="text-label-sm text-on-surface-variant font-medium">Total Saved</p>
+<h3 class="text-3xl font-bold text-green-700 font-headline mt-1">3,241</h3>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-transparent hover:border-outline-variant/20 transition-all group">
+<div class="flex items-center justify-between mb-4">
+<span class="p-2 bg-blue-50 text-blue-900 rounded-lg group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="pending_actions">pending_actions</span>
+</span>
+<span class="text-xs font-semibold text-error">High</span>
+</div>
+<p class="text-label-sm text-on-surface-variant font-medium">Follow-ups Pending</p>
+<h3 class="text-3xl font-bold text-blue-900 font-headline mt-1">148</h3>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-transparent hover:border-outline-variant/20 transition-all group">
+<div class="flex items-center justify-between mb-4">
+<span class="p-2 bg-slate-50 text-slate-700 rounded-lg group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+</span>
+<span class="text-xs font-semibold text-slate-500">Stable</span>
+</div>
+<p class="text-label-sm text-on-surface-variant font-medium">Active Evangelists</p>
+<h3 class="text-3xl font-bold text-primary font-headline mt-1">84</h3>
+</div>
+</div>
+<div class="grid grid-cols-12 gap-8">
+<!-- Left Column: Spiritual Insights & Data -->
+<div class="col-span-12 lg:col-span-8 space-y-8">
+<!-- Chart Area: Weekly Outreach -->
+<section class="bg-surface-container-lowest p-8 rounded-xl shadow-sm">
+<div class="flex justify-between items-center mb-8">
+<div>
+<h4 class="text-xl font-bold text-primary font-headline">Weekly Outreach Trends</h4>
+<p class="text-sm text-on-surface-variant">Movement of souls across the last 7 weeks</p>
+</div>
+<select class="bg-surface-container border-none rounded-lg text-sm font-medium focus:ring-primary-container">
+<option>Last 3 Months</option>
+<option>Last 6 Months</option>
+</select>
+</div>
+<div class="h-64 flex items-end justify-between space-x-2 pb-2">
+<!-- Bar Chart Simulation -->
+<div class="flex flex-col items-center flex-1 group">
+<div class="w-full bg-primary-fixed rounded-t-xl transition-all group-hover:bg-primary-container h-[40%]"></div>
+<span class="text-[10px] mt-2 font-medium text-on-surface-variant">W1</span>
+</div>
+<div class="flex flex-col items-center flex-1 group">
+<div class="w-full bg-primary-fixed rounded-t-xl transition-all group-hover:bg-primary-container h-[60%]"></div>
+<span class="text-[10px] mt-2 font-medium text-on-surface-variant">W2</span>
+</div>
+<div class="flex flex-col items-center flex-1 group">
+<div class="w-full bg-primary-fixed rounded-t-xl transition-all group-hover:bg-primary-container h-[55%]"></div>
+<span class="text-[10px] mt-2 font-medium text-on-surface-variant">W3</span>
+</div>
+<div class="flex flex-col items-center flex-1 group">
+<div class="w-full bg-primary-fixed rounded-t-xl transition-all group-hover:bg-primary-container h-[85%]"></div>
+<span class="text-[10px] mt-2 font-medium text-on-surface-variant">W4</span>
+</div>
+<div class="flex flex-col items-center flex-1 group">
+<div class="w-full bg-primary-fixed rounded-t-xl transition-all group-hover:bg-primary-container h-[70%]"></div>
+<span class="text-[10px] mt-2 font-medium text-on-surface-variant">W5</span>
+</div>
+<div class="flex flex-col items-center flex-1 group">
+<div class="w-full bg-primary-fixed rounded-t-xl transition-all group-hover:bg-primary-container h-[95%]"></div>
+<span class="text-[10px] mt-2 font-medium text-on-surface-variant">W6</span>
+</div>
+<div class="flex flex-col items-center flex-1 group">
+<div class="w-full bg-primary-fixed rounded-t-xl transition-all group-hover:bg-primary-container h-[80%]"></div>
+<span class="text-[10px] mt-2 font-medium text-on-surface-variant">Current</span>
+</div>
+</div>
+</section>
+<!-- Distribution Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="bg-surface-container-low p-6 rounded-xl flex flex-col justify-between">
+<h4 class="text-sm font-bold text-primary font-headline mb-6 uppercase tracking-widest">Demographics</h4>
+<div class="space-y-6">
+<div>
+<div class="flex justify-between text-xs mb-2">
+<span class="font-semibold">Male vs Female</span>
+<span class="text-on-surface-variant">48% / 52%</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full flex overflow-hidden">
+<div class="h-full bg-primary w-[48%]"></div>
+<div class="h-full bg-secondary-fixed-dim w-[52%]"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-xs mb-2">
+<span class="font-semibold">Students vs Non-students</span>
+<span class="text-on-surface-variant">65% / 35%</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full flex overflow-hidden">
+<div class="h-full bg-primary w-[65%]"></div>
+<div class="h-full bg-secondary-fixed-dim w-[35%]"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl">
+<h4 class="text-sm font-bold text-primary font-headline mb-4 uppercase tracking-widest">Location Reach</h4>
+<div class="space-y-3">
+<div class="flex items-center justify-between p-3 bg-white/50 rounded-lg">
+<span class="text-sm font-medium">Downtown Campus</span>
+<span class="text-sm font-bold text-primary">4.2k</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-white/50 rounded-lg">
+<span class="text-sm font-medium">North Sector</span>
+<span class="text-sm font-bold text-primary">2.8k</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-white/50 rounded-lg">
+<span class="text-sm font-medium">West Outreach</span>
+<span class="text-sm font-bold text-primary">1.9k</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Urgent Attention: Data Table -->
+<section class="bg-white rounded-xl shadow-sm overflow-hidden">
+<div class="p-6 border-b border-surface-container">
+<h4 class="text-lg font-bold text-primary font-headline">Recent Outreach Ledger</h4>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-surface-container-high">
+<tr>
+<th class="px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider">Member Name</th>
+<th class="px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider">Evangelist</th>
+<th class="px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider">Follow-up</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container">
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center">
+<div class="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-xs mr-3">JS</div>
+<span class="text-sm font-medium text-primary">Jonathan Smith</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Saved</span>
+</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Sarah Miller</td>
+<td class="px-6 py-4 text-sm text-primary font-semibold">Today</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center">
+<div class="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-xs mr-3">AL</div>
+<span class="text-sm font-medium text-primary">Angela Lopez</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary-container text-on-secondary-container">Unsure</span>
+</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Mark T.</td>
+<td class="px-6 py-4 text-sm text-error font-semibold">Overdue</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center">
+<div class="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-xs mr-3">RW</div>
+<span class="text-sm font-medium text-primary">Robert White</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-surface-container text-on-surface-variant">Not Saved</span>
+</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Sarah Miller</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Tomorrow</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+<!-- Right Column: Focus & Alerts -->
+<div class="col-span-12 lg:col-span-4 space-y-8">
+<!-- Pie Chart: Saved Breakdown -->
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm">
+<h4 class="text-lg font-bold text-primary font-headline mb-6">Spiritual Status</h4>
+<div class="relative w-48 h-48 mx-auto mb-8">
+<svg class="w-full h-full transform -rotate-90">
+<!-- Circular segments simulation -->
+<circle cx="96" cy="96" fill="transparent" r="80" stroke="#002046" stroke-dasharray="300 502" stroke-width="12"></circle>
+<circle cx="96" cy="96" fill="transparent" r="80" stroke="#afc8f2" stroke-dasharray="150 502" stroke-dashoffset="-300" stroke-width="12"></circle>
+<circle cx="96" cy="96" fill="transparent" r="80" stroke="#e0e3e5" stroke-dasharray="52 502" stroke-dashoffset="-450" stroke-width="12"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-3xl font-extrabold text-primary">3.2k</span>
+<span class="text-[10px] uppercase font-bold text-on-surface-variant">Total</span>
+</div>
+</div>
+<div class="space-y-3">
+<div class="flex items-center justify-between text-xs">
+<div class="flex items-center">
+<span class="w-3 h-3 bg-primary rounded-full mr-2"></span>
+<span class="font-medium">Saved</span>
+</div>
+<span class="font-bold">60%</span>
+</div>
+<div class="flex items-center justify-between text-xs">
+<div class="flex items-center">
+<span class="w-3 h-3 bg-secondary-fixed-dim rounded-full mr-2"></span>
+<span class="font-medium">Unsure</span>
+</div>
+<span class="font-bold">30%</span>
+</div>
+<div class="flex items-center justify-between text-xs">
+<div class="flex items-center">
+<span class="w-3 h-3 bg-surface-container-highest rounded-full mr-2"></span>
+<span class="font-medium">Not Saved</span>
+</div>
+<span class="font-bold">10%</span>
+</div>
+</div>
+</div>
+<!-- Alerts Section -->
+<div class="space-y-4">
+<h4 class="text-sm font-bold text-error font-headline uppercase tracking-widest px-1">Critical Alerts</h4>
+<div class="bg-error-container/20 border-l-4 border-error p-4 rounded-r-xl">
+<div class="flex items-start">
+<span class="material-symbols-outlined text-error mr-3" data-icon="warning">warning</span>
+<div>
+<h5 class="text-sm font-bold text-on-error-container">Follow-up Gap</h5>
+<p class="text-xs text-on-error-container/80 mt-1">42 people from the 'Youth Revival' event haven't been contacted in 5 days.</p>
+</div>
+</div>
+</div>
+<div class="bg-blue-50 border-l-4 border-blue-600 p-4 rounded-r-xl">
+<div class="flex items-start">
+<span class="material-symbols-outlined text-blue-600 mr-3" data-icon="person_off">person_off</span>
+<div>
+<h5 class="text-sm font-bold text-blue-900">Inactive Evangelists</h5>
+<p class="text-xs text-blue-800 mt-1">5 core members of the West Team have not logged activity this week.</p>
+</div>
+</div>
+</div>
+<div class="bg-slate-100 border-l-4 border-slate-400 p-4 rounded-r-xl">
+<div class="flex items-start">
+<span class="material-symbols-outlined text-slate-600 mr-3" data-icon="map">map</span>
+<div>
+<h5 class="text-sm font-bold text-slate-900">Low Activity Area</h5>
+<p class="text-xs text-slate-700 mt-1">The East Borough has seen a 30% drop in community engagement.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Strategic Quote/Thought -->
+<div class="editorial-gradient p-8 rounded-xl text-white shadow-xl shadow-blue-900/10 relative overflow-hidden">
+<span class="material-symbols-outlined absolute -top-4 -right-4 text-8xl opacity-10" data-icon="format_quote">format_quote</span>
+<h4 class="text-xs font-bold uppercase tracking-[0.2em] mb-4 opacity-70">Spiritual Insight</h4>
+<p class="text-xl font-headline font-semibold leading-relaxed italic">"The harvest is plentiful, but the laborers are few. Pray therefore the Lord of the harvest to send out laborers."</p>
+<p class="mt-4 text-sm opacity-60">— Matthew 9:37-38</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Mobile Navigation Shell (Suppressed on large screens) -->
+<div class="md:hidden fixed bottom-0 left-0 w-full glass-card border-t-0 py-3 px-6 flex justify-between items-center z-50">
+<button class="flex flex-col items-center text-blue-900">
+<span class="material-symbols-outlined" data-icon="dashboard" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="text-[10px] font-bold mt-1">Home</span>
+</button>
+<button class="flex flex-col items-center text-slate-400">
+<span class="material-symbols-outlined" data-icon="campaign">campaign</span>
+<span class="text-[10px] mt-1">Outreach</span>
+</button>
+<div class="relative -mt-12">
+<button class="w-14 h-14 editorial-gradient rounded-full shadow-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-2xl" data-icon="add">add</span>
+</button>
+</div>
+<button class="flex flex-col items-center text-slate-400">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="text-[10px] mt-1">Reports</span>
+</button>
+<button class="flex flex-col items-center text-slate-400">
+<span class="material-symbols-outlined" data-icon="tune">tune</span>
+<span class="text-[10px] mt-1">Settings</span>
+</button>
+</div>
+</body></html>
