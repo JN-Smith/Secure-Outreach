@@ -7,17 +7,55 @@ async function throwIfResNotOk(res: Response) {
   }
 }
 
+function getAuthHeaders(hasBody: boolean): Record<string, string> {
+  const token = localStorage.getItem("access_token");
+  return {
+    ...(hasBody ? { "Content-Type": "application/json" } : {}),
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+}
+
+async function tryRefreshToken(): Promise<string | null> {
+  try {
+    const res = await fetch("/api/auth/refresh", {
+      method: "POST",
+      credentials: "include",
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    localStorage.setItem("access_token", data.access_token);
+    return data.access_token;
+  } catch {
+    return null;
+  }
+}
+
 export async function apiRequest(
   method: string,
   url: string,
-  data?: unknown | undefined,
+  data?: unknown,
 ): Promise<Response> {
-  const res = await fetch(url, {
+  let res = await fetch(url, {
     method,
-    headers: data ? { "Content-Type": "application/json" } : {},
+    headers: getAuthHeaders(!!data),
     body: data ? JSON.stringify(data) : undefined,
     credentials: "include",
   });
+
+  // On 401, try once to refresh then retry
+  if (res.status === 401) {
+    const newToken = await tryRefreshToken();
+    if (newToken) {
+      res = await fetch(url, {
+        method,
+        headers: getAuthHeaders(!!data),
+        body: data ? JSON.stringify(data) : undefined,
+        credentials: "include",
+      });
+    } else {
+      localStorage.removeItem("access_token");
+    }
+  }
 
   await throwIfResNotOk(res);
   return res;
@@ -29,9 +67,25 @@ export const getQueryFn: <T>(options: {
 }) => QueryFunction<T> =
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
-    const res = await fetch(queryKey.join("/") as string, {
+    const url = queryKey.join("/") as string;
+    let res = await fetch(url, {
       credentials: "include",
+      headers: getAuthHeaders(false),
     });
+
+    if (res.status === 401) {
+      const newToken = await tryRefreshToken();
+      if (newToken) {
+        res = await fetch(url, {
+          credentials: "include",
+          headers: getAuthHeaders(false),
+        });
+      } else {
+        localStorage.removeItem("access_token");
+        if (unauthorizedBehavior === "returnNull") return null;
+        throw new Error("401: Unauthorized");
+      }
+    }
 
     if (unauthorizedBehavior === "returnNull" && res.status === 401) {
       return null;

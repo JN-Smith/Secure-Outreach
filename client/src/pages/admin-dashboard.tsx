@@ -1,14 +1,27 @@
 import { useState } from "react";
-import {
-  MOCK_STATS,
-  MOCK_EVANGELISTS,
-  MOCK_TEAMS,
-  MOCK_CONTACTS,
-  MOCK_WEEKLY_TRENDS,
-  getPipelineSummary,
-  getEvangelist,
-  statusBadgeClass,
-} from "@/lib/mock-data";
+import { useAdminDashboard } from "@/lib/api/dashboard";
+import { useUsers } from "@/lib/api/users";
+import { useTeams } from "@/lib/api/teams";
+import { useContacts } from "@/lib/contacts-context";
+import { useCreateUser } from "@/lib/api/users";
+
+const PIPELINE_COLORS: Record<string, string> = {
+  "New": "#fca21e",
+  "Needs Follow-up": "#835000",
+  "Actively Discipling": "#515d69",
+  "Connected to Church": "#16a34a",
+  "Not Interested": "#9ca3af",
+};
+
+const statusBadgeClass = (status: string) => {
+  switch (status) {
+    case "New": return "bg-blue-100 text-blue-700";
+    case "Needs Follow-up": return "bg-orange-100 text-orange-700";
+    case "Actively Discipling": return "bg-purple-100 text-purple-700";
+    case "Connected to Church": return "bg-green-100 text-green-700";
+    default: return "bg-gray-100 text-gray-700";
+  }
+};
 import {
   BarChart,
   Bar,
@@ -28,9 +41,69 @@ export default function AdminDashboard() {
   const [contactSearch, setContactSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [showNewEvForm, setShowNewEvForm] = useState(false);
-  const [newEv, setNewEv] = useState({ name: "", email: "", phone: "", teamId: "t1", role: "member" });
+  const [newEv, setNewEv] = useState({ name: "", email: "", phone: "", password: "", teamId: "", role: "evangelist" });
 
-  const pipeline = getPipelineSummary();
+  const { data: dashboard } = useAdminDashboard();
+  const { data: evangelists = [] } = useUsers("evangelist");
+  const { data: teamsData = [] } = useTeams();
+  const { contacts: allContacts } = useContacts();
+  const createUser = useCreateUser();
+
+  // Map API data to shapes expected by existing UI
+  const MOCK_STATS = {
+    totalReached: dashboard?.total_reached ?? 0,
+    savedAllTime: dashboard?.saved_all_time ?? 0,
+    savedThisMonth: 0,
+    activeEvangelists: dashboard?.active_evangelists ?? 0,
+    totalEvangelists: dashboard?.active_evangelists ?? 0,
+    totalTeams: teamsData.length,
+    followUpPending: dashboard?.follow_up_pending ?? 0,
+    pendingFollowUps: dashboard?.follow_up_pending ?? 0,
+  };
+
+  const MOCK_WEEKLY_TRENDS = (dashboard?.weekly_trends ?? []).map(t => ({
+    week: new Date(t.week).toLocaleDateString("en-KE", { month: "short", day: "numeric" }),
+    contacts: t.contacts,
+    saved: t.saved,
+  }));
+
+  const pipeline = (dashboard?.pipeline ?? []).map(p => ({
+    stage: p.status,
+    count: p.count,
+    color: PIPELINE_COLORS[p.status] ?? "#9ca3af",
+  }));
+
+  const MOCK_EVANGELISTS = evangelists.map(e => ({
+    id: e.id,
+    name: e.full_name,
+    email: e.email,
+    phone: e.phone ?? "",
+    location: e.location ?? "",
+    teamId: "",
+    teamRole: "member",
+    totalContacts: 0,
+    thisWeekContacts: 0,
+    thisMonthContacts: 0,
+    savedCount: 0,
+    followUpPending: 0,
+  }));
+
+  const MOCK_TEAMS = teamsData.map(t => ({
+    id: t.id,
+    name: t.name,
+    zone: t.zone,
+    memberIds: [] as string[],
+    outreachDays: t.outreach_days,
+    leadEvangelistId: t.lead_evangelist_id ?? "",
+    thisMonthContacts: 0,
+    totalContacts: 0,
+    savedCount: 0,
+  }));
+
+  const getEvangelist = (id: string) => evangelists.find(e => e.id === id);
+
+  const MOCK_CONTACTS = allContacts;
+
   const trendLast8 = MOCK_WEEKLY_TRENDS.slice(-8);
   const statuses = ["All", "New", "Needs Follow-up", "Actively Discipling", "Connected to Church", "Not Interested"];
 
@@ -207,6 +280,7 @@ export default function AdminDashboard() {
                   { key: "name", label: "Full Name", placeholder: "Grace Achieng", type: "text" },
                   { key: "email", label: "Email", placeholder: "grace@manifest.ke", type: "email" },
                   { key: "phone", label: "Phone", placeholder: "+254 712 345 000", type: "tel" },
+                  { key: "password", label: "Password", placeholder: "Temporary password", type: "password" },
                 ].map(({ key, label, placeholder, type }) => (
                   <div key={key} className="flex flex-col gap-1.5">
                     <label className="sp-label ml-0.5">{label}</label>
@@ -234,7 +308,16 @@ export default function AdminDashboard() {
                 </div>
               </div>
               <div className="flex gap-3">
-                <button className="btn-primary text-sm py-2.5 flex items-center gap-2">
+                <button
+                  className="btn-primary text-sm py-2.5 flex items-center gap-2"
+                  onClick={() => {
+                    if (!newEv.email || !newEv.password || !newEv.name) return;
+                    createUser.mutate(
+                      { full_name: newEv.name, email: newEv.email, phone: newEv.phone, password: newEv.password, role: newEv.role },
+                      { onSuccess: () => { setShowNewEvForm(false); setNewEv({ name: "", email: "", phone: "", password: "", teamId: "", role: "evangelist" }); } }
+                    );
+                  }}
+                >
                   <span className="material-symbols-outlined text-[16px]">save</span>
                   Save Evangelist
                 </button>
