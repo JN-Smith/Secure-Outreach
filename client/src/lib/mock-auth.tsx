@@ -5,15 +5,25 @@ type UserRole = "admin" | "pastor" | "evangelist" | "data_collector";
 
 interface User {
   id: string;
-  username: string;
+  email: string;
   role: UserRole;
+}
+
+interface InternalUser extends User {
+  password: string;
 }
 
 interface AuthContextType {
   user: User | null;
-  login: (username: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => void;
 }
+
+const DEFAULT_USERS: InternalUser[] = [
+  { id: "1", email: "admin@manifest.ke", password: "admin123", role: "admin" },
+  { id: "2", email: "pastor@manifest.ke", password: "pastor123", role: "pastor" },
+  { id: "3", email: "evangelist@manifest.ke", password: "evangelist123", role: "evangelist" },
+];
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -21,22 +31,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [, setLocation] = useLocation();
 
-  const login = async (username: string, password: string) => {
-    try {
-      const res = await fetch("/api/signin", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
-      if (!res.ok) {
-        throw new Error("Invalid credentials");
-      }
-      const data = await res.json();
-      setUser({ id: data.id, username: data.username, role: data.role });
-      setLocation("/");
-    } catch (err) {
-      throw err;
+  const login = async (email: string, password: string) => {
+    const found = DEFAULT_USERS.find(
+      (u) => u.email === email && u.password === password,
+    );
+
+    if (!found) {
+      throw new Error("Invalid credentials");
     }
+
+    setUser({ id: found.id, email: found.email, role: found.role });
+    setLocation("/");
   };
 
   const logout = () => {

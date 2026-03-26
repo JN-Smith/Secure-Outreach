@@ -15,6 +15,32 @@ export class MemStorage implements IStorage {
 
   constructor() {
     this.users = new Map();
+
+    // Add a hardcoded user for testing
+    const hardcodedUser: User = {
+      id: "1",
+      username: "testuser",
+      password: "password123", // In production, hash passwords!
+      role: "admin",
+    };
+    this.users.set(hardcodedUser.id, hardcodedUser);
+
+    // Add additional hardcoded users for testing
+    const evangelistUser: User = {
+      id: "2",
+      username: "evangelist",
+      password: "evangelist123", // In production, hash passwords!
+      role: "evangelist",
+    };
+    this.users.set(evangelistUser.id, evangelistUser);
+
+    const pastorUser: User = {
+      id: "3",
+      username: "pastor",
+      password: "pastor123", // In production, hash passwords!
+      role: "pastor",
+    };
+    this.users.set(pastorUser.id, pastorUser);
   }
 
   async getUser(id: string): Promise<User | undefined> {
