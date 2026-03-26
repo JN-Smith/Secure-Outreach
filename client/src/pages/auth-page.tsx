@@ -1,9 +1,9 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useAuth } from "@/lib/mock-auth";
+import { useAuth } from "@/lib/auth";
 import { useState } from "react";
-import { Eye, EyeOff, Lock, Mail, Sparkles } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().email("Enter a valid work email"),
@@ -33,10 +33,7 @@ export default function AuthPage() {
     <div className="min-h-screen flex flex-col items-center justify-between bg-[#EDE8DF] py-10 px-4">
       {/* Header */}
       <div className="flex flex-col items-center gap-3 mt-4">
-        <div className="h-16 w-16 rounded-2xl bg-[#F5A623] flex items-center justify-center shadow-lg">
-          <Sparkles className="h-8 w-8 text-black" />
-        </div>
-        <h1 className="text-3xl font-bold text-[#1C1C1C] tracking-tight">Manifest Kenya</h1>
+        <img src="/logo.png" alt="Manifest Kenya" className="h-20 w-auto" />
         <p className="text-xs font-semibold tracking-[0.2em] text-[#6B6B6B] uppercase">
           Ecclesiastical Management
         </p>

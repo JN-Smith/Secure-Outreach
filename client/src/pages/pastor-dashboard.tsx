@@ -1,12 +1,4 @@
-import {
-  MOCK_STATS,
-  MOCK_TEAMS,
-  MOCK_EVANGELISTS,
-  MOCK_WEEKLY_TRENDS,
-  MOCK_SESSIONS,
-  getPipelineSummary,
-  getEvangelist,
-} from "@/lib/mock-data";
+import { usePastorDashboard } from "@/lib/api/dashboard";
 import {
   AreaChart,
   Area,
@@ -19,20 +11,84 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
+const PIPELINE_COLORS: Record<string, string> = {
+  "New": "#fca21e",
+  "Needs Follow-up": "#835000",
+  "Actively Discipling": "#515d69",
+  "Connected to Church": "#16a34a",
+  "Not Interested": "#9ca3af",
+};
+
 export default function PastorDashboard() {
-  const pipeline = getPipelineSummary();
+  const { data: dashboard } = usePastorDashboard();
+
+  // Map API data to shapes used by existing UI
+  const MOCK_STATS = {
+    totalReached: dashboard?.total_reached ?? 0,
+    savedAllTime: dashboard?.saved_all_time ?? 0,
+    studentsReached: dashboard?.students_reached ?? 0,
+    connectedToChurch: dashboard?.connected_to_church ?? 0,
+    thisWeekContacts: 0,
+  };
+
+  const MOCK_WEEKLY_TRENDS = (dashboard?.weekly_trends ?? []).map(t => ({
+    week: new Date(t.week).toLocaleDateString("en-KE", { month: "short", day: "numeric" }),
+    contacts: t.contacts,
+    saved: t.saved,
+    students: 0,
+  }));
+
+  const pipeline = (dashboard?.pipeline ?? []).map(p => ({
+    stage: p.status,
+    count: p.count,
+    color: PIPELINE_COLORS[p.status] ?? "#9ca3af",
+  }));
+
   const totalInPipeline = pipeline.reduce((a, p) => a + p.count, 0);
   const connectedPct = Math.round(
-    ((pipeline.find(p => p.stage === "Connected")?.count ?? 0) / MOCK_STATS.totalReached) * 100
+    ((pipeline.find(p => p.stage === "Connected to Church")?.count ?? 0) / Math.max(MOCK_STATS.totalReached, 1)) * 100
   );
-  const savedPct = Math.round((MOCK_STATS.savedAllTime / MOCK_STATS.totalReached) * 100);
+  const savedPct = Math.round((MOCK_STATS.savedAllTime / Math.max(MOCK_STATS.totalReached, 1)) * 100);
 
-  const teamPerf = MOCK_TEAMS.map(t => ({
-    name: t.name.replace("Team ", ""),
-    contacts: t.thisMonthContacts,
-    saved: t.savedCount,
-    rate: Math.round((t.savedCount / t.totalContacts) * 100),
+  const teamPerf = (dashboard?.team_performance ?? []).map(t => ({
+    name: t.team_name.replace("Team ", ""),
+    contacts: t.contacts,
+    saved: t.saved,
+    rate: Math.round((t.saved / Math.max(t.contacts, 1)) * 100),
   }));
+
+  // Map top evangelists and recent sessions for the UI sections below
+  const MOCK_EVANGELISTS = (dashboard?.top_evangelists ?? []).map(e => ({
+    id: e.user_id,
+    name: e.full_name,
+    thisMonthContacts: e.contacts,
+    savedCount: e.saved,
+    teamId: "",
+  }));
+
+  const MOCK_SESSIONS = (dashboard?.recent_sessions ?? []).map(s => ({
+    id: s.id,
+    location: s.location,
+    date: s.date,
+    contactsMade: s.contacts_made,
+    savedCount: s.saved_count,
+    prayerCount: 0,
+    teamId: "",
+  }));
+
+  // Map team performance for the team list section
+  const MOCK_TEAMS = (dashboard?.team_performance ?? []).map(t => ({
+    id: t.team_id,
+    name: t.team_name,
+    zone: "",
+    savedCount: t.saved,
+    totalContacts: t.contacts,
+    thisMonthContacts: t.contacts,
+    leadEvangelistId: "",
+    activeZones: [] as string[],
+  }));
+
+  const getEvangelist = (_id: string): { name: string } | null => null;
 
   return (
     <div className="space-y-10 animate-fade-up">

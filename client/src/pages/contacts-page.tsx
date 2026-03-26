@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link } from "wouter";
-import { Contact } from "@/lib/mock-data";
-import { useContacts } from "@/lib/contacts-context";
+import { useContacts, Contact } from "@/lib/contacts-context";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { 

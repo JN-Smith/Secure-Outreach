@@ -5,7 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import Layout from "@/components/layout";
-import { AuthProvider, useAuth } from "@/lib/mock-auth";
+import { AuthProvider, useAuth } from "@/lib/auth";
 import { ContactsProvider } from "@/lib/contacts-context";
 
 // Pages
@@ -39,7 +39,15 @@ function AuthenticatedApp() {
 }
 
 function Router() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <span className="material-symbols-outlined animate-spin text-4xl text-primary">progress_activity</span>
+      </div>
+    );
+  }
 
   if (!user) {
     return <AuthPage />;

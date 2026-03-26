@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState } from "react";
-import { useAuth } from "@/lib/mock-auth";
+import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -17,7 +17,7 @@ const formSchema = z.object({
 });
 
 export default function SignUpPage() {
-  const { signup } = useAuth();
+  const _auth = useAuth(); // signup not yet implemented — placeholder
   const [error, setError] = useState<string | null>(null);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -31,7 +31,8 @@ export default function SignUpPage() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setError(null);
     try {
-      await signup(values.username, values.password, values.role);
+      // signup not yet wired — admin creates users via the admin dashboard
+      throw new Error("Self-registration disabled. Contact your admin.");
     } catch (err: any) {
       setError(err.message || "Sign up failed");
     }

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Bell, Shield, User, Globe } from "lucide-react";
-import { useAuth } from "@/lib/mock-auth";
+import { useAuth } from "@/lib/auth";
 
 export default function SettingsPage() {
   const { user } = useAuth();
@@ -30,7 +30,7 @@ export default function SettingsPage() {
           <CardContent className="space-y-4">
             <div className="grid gap-2">
               <Label htmlFor="name">Display Name</Label>
-              <Input id="name" defaultValue={user?.name} />
+              <Input id="name" defaultValue={user?.full_name} />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="email">Email Address</Label>

@@ -1,11 +1,19 @@
 import { useState } from "react";
-import {
-  CURRENT_EVANGELIST,
-  MOCK_TEAMS,
-  MOCK_SESSIONS,
-  getContactsByEvangelist,
-  statusBadgeClass,
-} from "@/lib/mock-data";
+import { useAuth } from "@/lib/auth";
+import { useEvangelistDashboard } from "@/lib/api/dashboard";
+import { useContacts } from "@/lib/contacts-context";
+import { useTeams } from "@/lib/api/teams";
+
+const statusBadgeClass = (status: string) => {
+  const map: Record<string, string> = {
+    "New": "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-100 text-blue-700",
+    "Needs Follow-up": "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-orange-100 text-orange-700",
+    "Actively Discipling": "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-purple-100 text-purple-700",
+    "Connected to Church": "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-green-100 text-green-700",
+    "Not Interested": "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-gray-100 text-gray-700",
+  };
+  return map[status] ?? "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-gray-100 text-gray-700";
+};
 import {
   BarChart,
   Bar,
@@ -54,13 +62,26 @@ const ACTIVITY_FEED = [
 ];
 
 export default function EvangelistDashboard() {
-  const me = CURRENT_EVANGELIST;
-  const myContacts = getContactsByEvangelist(me.id);
-  const myTeam = MOCK_TEAMS.find((t) => t.id === me.teamId);
+  const { user } = useAuth();
+  const { data: dashboard } = useEvangelistDashboard();
+  const { contacts: myContacts } = useContacts();
+  const { data: teams = [] } = useTeams();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
 
-  const weeklyData = me.weeklyTrend.map((val, i) => ({ day: DAYS[i], contacts: val }));
+  // Compatibility shim — keep the same "me" and "myTeam" variable names used throughout
+  const me = {
+    name: user?.full_name ?? "",
+    location: user?.location ?? "",
+    savedCount: dashboard?.saved_count ?? 0,
+    totalContacts: dashboard?.total_contacts ?? 0,
+    thisWeekContacts: dashboard?.this_week_contacts ?? 0,
+    thisMonthContacts: dashboard?.this_month_contacts ?? 0,
+    followUpPending: dashboard?.follow_up_pending ?? 0,
+    connectedToChurch: dashboard?.connected_to_church ?? 0,
+  };
+  const myTeam = teams[0] ?? null;
+  const weeklyData = dashboard?.weekly_trend ?? DAYS.map((day) => ({ day, contacts: 0 }));
   const statuses = ["All", "New", "Needs Follow-up", "Actively Discipling", "Connected to Church", "Not Interested"];
 
   const filtered = myContacts.filter((c) => {
