@@ -1,7 +1,7 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, useLocation } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import Layout from "@/components/layout";
@@ -10,12 +10,16 @@ import { ContactsProvider } from "@/lib/contacts-context";
 
 // Pages
 import AuthPage from "@/pages/auth-page";
+import AcceptInvitePage from "@/pages/accept-invite-page";
 import ContactsPage from "@/pages/contacts-page";
 import ContactFormPage from "@/pages/contact-form-page";
+import FollowUpsPage from "@/pages/followups-page";
 import SettingsPage from "@/pages/settings-page";
 import EvangelistDashboard from "@/pages/evangelist-dashboard";
 import AdminDashboard from "@/pages/admin-dashboard";
 import PastorDashboard from "@/pages/pastor-dashboard";
+import EvangelistsPage from "@/pages/evangelists-page";
+import AnalyticsPage from "@/pages/analytics-page";
 
 function AuthenticatedApp() {
   const { user } = useAuth();
@@ -31,6 +35,9 @@ function AuthenticatedApp() {
         <Route path="/" component={DashboardComponent} />
         <Route path="/contacts" component={ContactsPage} />
         <Route path="/contacts/new" component={ContactFormPage} />
+        <Route path="/evangelists" component={EvangelistsPage} />
+        <Route path="/analytics" component={AnalyticsPage} />
+        <Route path="/followups" component={FollowUpsPage} />
         <Route path="/settings" component={SettingsPage} />
         <Route component={NotFound} />
       </Switch>
@@ -40,6 +47,12 @@ function AuthenticatedApp() {
 
 function Router() {
   const { user, loading } = useAuth();
+  const [location] = useLocation();
+
+  // Public route — accessible without authentication
+  if (location.startsWith("/accept-invite")) {
+    return <AcceptInvitePage />;
+  }
 
   if (loading) {
     return (
@@ -62,7 +75,7 @@ function App() {
       <TooltipProvider>
         <AuthProvider>
           <ContactsProvider>
-            <Toaster />
+            <Toaster richColors position="top-right" />
             <Router />
           </ContactsProvider>
         </AuthProvider>

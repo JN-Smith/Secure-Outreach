@@ -1,9 +1,10 @@
 import { useState } from "react";
+import { toast } from "sonner";
 import { useAdminDashboard } from "@/lib/api/dashboard";
-import { useUsers } from "@/lib/api/users";
+import { useUsers, useInviteEvangelist, useEvangelistAnalytics, type EvangelistKPI } from "@/lib/api/users";
 import { useTeams } from "@/lib/api/teams";
 import { useContacts } from "@/lib/contacts-context";
-import { useCreateUser } from "@/lib/api/users";
+import { Copy, Check, Mail, AlertCircle } from "lucide-react";
 
 const PIPELINE_COLORS: Record<string, string> = {
   "New": "#fca21e",
@@ -34,22 +35,140 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-type Tab = "overview" | "evangelists" | "teams" | "contacts";
+type Tab = "overview" | "analytics" | "evangelists" | "teams" | "contacts";
+
+function CopyButton({ text }: { text: string }) {
+  const [copied, setCopied] = useState(false);
+  function copy() {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+  return (
+    <button
+      onClick={copy}
+      className="flex items-center gap-1 text-xs text-amber-700 hover:text-amber-900 font-semibold transition-colors"
+    >
+      {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+      {copied ? "Copied!" : "Copy link"}
+    </button>
+  );
+}
+
+function formatLoginTime(iso: string | null): string {
+  if (!iso) return "Never";
+  const d = new Date(iso);
+  const now = new Date();
+  const diffMs = now.getTime() - d.getTime();
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  if (diffDays === 0) return "Today";
+  if (diffDays === 1) return "Yesterday";
+  if (diffDays < 7) return `${diffDays}d ago`;
+  return d.toLocaleDateString("en-KE", { day: "numeric", month: "short" });
+}
+
+function AnalyticsTab({ kpis }: { kpis: EvangelistKPI[] }) {
+  return (
+    <div className="space-y-6">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        {[
+          { label: "Total Evangelists", value: kpis.length, icon: "volunteer_activism", color: "text-amber-600" },
+          { label: "Pending Setup", value: kpis.filter(k => k.invite_pending).length, icon: "pending", color: "text-orange-500" },
+          { label: "Follow-ups Done", value: kpis.reduce((s, k) => s + k.followups_done, 0), icon: "check_circle", color: "text-green-600" },
+          { label: "Converted", value: kpis.reduce((s, k) => s + k.converted, 0), icon: "church", color: "text-purple-600" },
+        ].map(({ label, value, icon, color }) => (
+          <div key={label} className="bg-surface-container-lowest rounded-xl p-5 shadow-sm">
+            <span className={`material-symbols-outlined text-2xl ${color} mb-2 block`}>{icon}</span>
+            <p className="text-3xl font-black text-on-surface">{value}</p>
+            <p className="text-xs font-semibold text-secondary mt-0.5">{label}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="bg-surface-container-lowest rounded-xl shadow-sm overflow-x-auto">
+        <div className="px-6 py-4 border-b border-outline-variant/10">
+          <p className="text-sm font-black text-on-surface">Evangelist Activity Breakdown</p>
+          <p className="text-xs text-secondary mt-0.5">Login activity, contacts, and follow-up progress per evangelist</p>
+        </div>
+        <table className="w-full text-sm min-w-[700px]">
+          <thead>
+            <tr className="bg-surface-container-low/50 text-left">
+              <th className="px-6 py-3 sp-label">Evangelist</th>
+              <th className="px-4 py-3 sp-label">Team</th>
+              <th className="px-4 py-3 sp-label text-right">This Week</th>
+              <th className="px-4 py-3 sp-label text-right">Total</th>
+              <th className="px-4 py-3 sp-label text-right">Follow-ups Done</th>
+              <th className="px-4 py-3 sp-label text-right">Pending</th>
+              <th className="px-4 py-3 sp-label text-right">Converted</th>
+              <th className="px-4 py-3 sp-label">Last Login</th>
+              <th className="px-4 py-3 sp-label text-right">Logins</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-outline-variant/10">
+            {kpis.map((k) => (
+              <tr key={k.user_id} className="hover:bg-surface-container-low/40 transition-colors">
+                <td className="px-6 py-3.5">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-full bg-primary-container/15 flex items-center justify-center text-primary font-black text-xs flex-shrink-0">
+                      {k.full_name.split(" ").map(n => n[0]).join("").slice(0, 2)}
+                    </div>
+                    <div>
+                      <p className="font-bold text-on-surface text-sm">{k.full_name}</p>
+                      {k.invite_pending && (
+                        <span className="text-[10px] font-black uppercase tracking-wider text-orange-500 flex items-center gap-0.5">
+                          <AlertCircle className="h-2.5 w-2.5" /> Pending Setup
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </td>
+                <td className="px-4 py-3.5 text-xs text-secondary">{k.team_name ?? "—"}</td>
+                <td className="px-4 py-3.5 text-right font-black text-primary">{k.contacts_this_week}</td>
+                <td className="px-4 py-3.5 text-right text-secondary">{k.contacts_total}</td>
+                <td className="px-4 py-3.5 text-right font-semibold text-green-700">{k.followups_done}</td>
+                <td className="px-4 py-3.5 text-right">
+                  <span className={`font-bold text-xs ${k.followups_pending > 5 ? "text-error" : "text-secondary"}`}>
+                    {k.followups_pending}
+                  </span>
+                </td>
+                <td className="px-4 py-3.5 text-right font-semibold text-purple-700">{k.converted}</td>
+                <td className="px-4 py-3.5">
+                  <span className={`text-xs font-semibold ${!k.last_login_at ? "text-secondary/50" : "text-on-surface"}`}>
+                    {formatLoginTime(k.last_login_at)}
+                  </span>
+                </td>
+                <td className="px-4 py-3.5 text-right text-xs text-secondary">{k.login_count}</td>
+              </tr>
+            ))}
+            {kpis.length === 0 && (
+              <tr>
+                <td colSpan={9} className="px-6 py-10 text-center text-secondary text-sm">
+                  No evangelists found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
 
 export default function AdminDashboard() {
   const [tab, setTab] = useState<Tab>("overview");
   const [contactSearch, setContactSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [showNewEvForm, setShowNewEvForm] = useState(false);
-  const [newEv, setNewEv] = useState({ name: "", email: "", phone: "", password: "", teamId: "", role: "evangelist" });
+  const [newEv, setNewEv] = useState({ name: "", email: "", phone: "", teamId: "", role: "evangelist" });
+  const [inviteLink, setInviteLink] = useState<string | null>(null);
 
   const { data: dashboard } = useAdminDashboard();
   const { data: evangelists = [] } = useUsers("evangelist");
   const { data: teamsData = [] } = useTeams();
   const { contacts: allContacts } = useContacts();
-  const createUser = useCreateUser();
+  const inviteEvangelist = useInviteEvangelist();
+  const { data: kpis = [] } = useEvangelistAnalytics();
 
-  // Map API data to shapes expected by existing UI
   const MOCK_STATS = {
     totalReached: dashboard?.total_reached ?? 0,
     savedAllTime: dashboard?.saved_all_time ?? 0,
@@ -81,11 +200,6 @@ export default function AdminDashboard() {
     location: e.location ?? "",
     teamId: "",
     teamRole: "member",
-    totalContacts: 0,
-    thisWeekContacts: 0,
-    thisMonthContacts: 0,
-    savedCount: 0,
-    followUpPending: 0,
   }));
 
   const MOCK_TEAMS = teamsData.map(t => ({
@@ -101,9 +215,7 @@ export default function AdminDashboard() {
   }));
 
   const getEvangelist = (id: string) => evangelists.find(e => e.id === id);
-
   const MOCK_CONTACTS = allContacts;
-
   const trendLast8 = MOCK_WEEKLY_TRENDS.slice(-8);
   const statuses = ["All", "New", "Needs Follow-up", "Actively Discipling", "Connected to Church", "Not Interested"];
 
@@ -117,10 +229,30 @@ export default function AdminDashboard() {
 
   const tabs: { key: Tab; label: string; icon: string }[] = [
     { key: "overview", label: "Overview", icon: "dashboard" },
+    { key: "analytics", label: "Analytics", icon: "bar_chart_4_bars" },
     { key: "evangelists", label: "Evangelists", icon: "volunteer_activism" },
     { key: "teams", label: "Teams", icon: "groups" },
     { key: "contacts", label: "All Contacts", icon: "contacts" },
   ];
+
+  function handleSendInvite() {
+    if (!newEv.email || !newEv.name) {
+      toast.error("Name and email are required");
+      return;
+    }
+    inviteEvangelist.mutate(
+      { full_name: newEv.name, email: newEv.email, phone: newEv.phone || undefined, role: newEv.role || "evangelist" },
+      {
+        onSuccess: (data) => {
+          const url = `${window.location.origin}/accept-invite?token=${data.token}`;
+          setInviteLink(url);
+          setNewEv({ name: "", email: "", phone: "", teamId: "", role: "evangelist" });
+          toast.success("Evangelist invited — share the link below");
+        },
+        onError: () => toast.error("Failed to create invite"),
+      },
+    );
+  }
 
   return (
     <div className="space-y-10 animate-fade-up">
@@ -168,7 +300,6 @@ export default function AdminDashboard() {
       {/* ── OVERVIEW ── */}
       {tab === "overview" && (
         <div className="space-y-8">
-          {/* Metric Cards */}
           <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
               { label: "Total Reached", value: MOCK_STATS.totalReached, delta: "+42", icon: "diversity_3", accent: "metric-card-amber", deltaClass: "text-primary" },
@@ -189,7 +320,6 @@ export default function AdminDashboard() {
             ))}
           </section>
 
-          {/* Charts Row */}
           <section className="grid grid-cols-1 lg:grid-cols-5 gap-6">
             <div className="lg:col-span-3 bg-surface-container-lowest rounded-xl p-8 shadow-sm">
               <p className="sp-label mb-1">12-Week Trend</p>
@@ -208,13 +338,13 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            {/* Pipeline */}
             <div className="lg:col-span-2 bg-surface-container-lowest rounded-xl p-8 shadow-sm">
               <p className="sp-label mb-1">Spiritual Journey</p>
               <h3 className="text-2xl font-black text-on-surface tracking-tight mb-6">Pipeline</h3>
               <div className="space-y-3.5">
                 {pipeline.map(({ stage, count, color }) => {
-                  const pct = Math.round((count / MOCK_CONTACTS.length) * 100);
+                  const total = MOCK_CONTACTS.length || 1;
+                  const pct = Math.round((count / total) * 100);
                   return (
                     <div key={stage}>
                       <div className="flex justify-between mb-1.5">
@@ -228,17 +358,9 @@ export default function AdminDashboard() {
                   );
                 })}
               </div>
-              <div className="mt-6 pt-4 border-t border-outline-variant/20">
-                <p className="text-xs text-secondary">
-                  Church connection rate: <span className="font-black text-on-surface">
-                    {Math.round((pipeline.find(p => p.stage === "Connected")?.count ?? 0) / MOCK_CONTACTS.length * 100)}%
-                  </span>
-                </p>
-              </div>
             </div>
           </section>
 
-          {/* Team Performance */}
           <section className="bg-surface-container-lowest rounded-xl p-8 shadow-sm">
             <p className="sp-label mb-1">This Month</p>
             <h3 className="text-2xl font-black text-on-surface tracking-tight mb-6">Team Performance</h3>
@@ -258,13 +380,16 @@ export default function AdminDashboard() {
         </div>
       )}
 
+      {/* ── ANALYTICS ── */}
+      {tab === "analytics" && <AnalyticsTab kpis={kpis} />}
+
       {/* ── EVANGELISTS ── */}
       {tab === "evangelists" && (
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <p className="text-sm text-secondary">{MOCK_EVANGELISTS.length} registered evangelists</p>
             <button
-              onClick={() => setShowNewEvForm(!showNewEvForm)}
+              onClick={() => { setShowNewEvForm(!showNewEvForm); setInviteLink(null); }}
               className="btn-primary text-sm py-2.5 px-5 flex items-center gap-2"
             >
               <span className="material-symbols-outlined text-[18px]">person_add</span>
@@ -273,56 +398,83 @@ export default function AdminDashboard() {
           </div>
 
           {showNewEvForm && (
-            <div className="bg-surface-container-lowest rounded-xl p-8 shadow-sm animate-fade-up">
-              <p className="text-sm font-black text-on-surface mb-6">Register New Evangelist</p>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                {[
-                  { key: "name", label: "Full Name", placeholder: "Grace Achieng", type: "text" },
-                  { key: "email", label: "Email", placeholder: "grace@manifest.ke", type: "email" },
-                  { key: "phone", label: "Phone", placeholder: "+254 712 345 000", type: "tel" },
-                  { key: "password", label: "Password", placeholder: "Temporary password", type: "password" },
-                ].map(({ key, label, placeholder, type }) => (
-                  <div key={key} className="flex flex-col gap-1.5">
-                    <label className="sp-label ml-0.5">{label}</label>
-                    <input
-                      type={type}
-                      className="field-input"
-                      placeholder={placeholder}
-                      value={(newEv as any)[key]}
-                      onChange={(e) => setNewEv(p => ({ ...p, [key]: e.target.value }))}
-                    />
+            <div className="bg-surface-container-lowest rounded-xl p-8 shadow-sm animate-fade-up space-y-6">
+              <p className="text-sm font-black text-on-surface">Invite New Evangelist</p>
+              <p className="text-xs text-secondary -mt-3">
+                An invite link will be generated. Share it with the evangelist so they can set their own password.
+              </p>
+
+              {inviteLink ? (
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                    <Mail className="h-4 w-4 text-amber-600 flex-shrink-0" />
+                    <p className="text-xs text-amber-800 font-mono flex-1 break-all">{inviteLink}</p>
                   </div>
-                ))}
-                <div className="flex flex-col gap-1.5">
-                  <label className="sp-label ml-0.5">Team</label>
-                  <select className="field-input cursor-pointer" value={newEv.teamId} onChange={e => setNewEv(p => ({ ...p, teamId: e.target.value }))}>
-                    {MOCK_TEAMS.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
-                  </select>
+                  <div className="flex gap-3">
+                    <CopyButton text={inviteLink} />
+                    <button
+                      className="text-xs text-secondary hover:text-on-surface font-semibold"
+                      onClick={() => { setInviteLink(null); setShowNewEvForm(false); }}
+                    >
+                      Done
+                    </button>
+                  </div>
                 </div>
-                <div className="flex flex-col gap-1.5">
-                  <label className="sp-label ml-0.5">Role</label>
-                  <select className="field-input cursor-pointer" value={newEv.role} onChange={e => setNewEv(p => ({ ...p, role: e.target.value }))}>
-                    <option value="member">Member</option>
-                    <option value="lead">Team Lead</option>
-                  </select>
-                </div>
-              </div>
-              <div className="flex gap-3">
-                <button
-                  className="btn-primary text-sm py-2.5 flex items-center gap-2"
-                  onClick={() => {
-                    if (!newEv.email || !newEv.password || !newEv.name) return;
-                    createUser.mutate(
-                      { full_name: newEv.name, email: newEv.email, phone: newEv.phone, password: newEv.password, role: newEv.role },
-                      { onSuccess: () => { setShowNewEvForm(false); setNewEv({ name: "", email: "", phone: "", password: "", teamId: "", role: "evangelist" }); } }
-                    );
-                  }}
-                >
-                  <span className="material-symbols-outlined text-[16px]">save</span>
-                  Save Evangelist
-                </button>
-                <button className="btn-outline text-sm py-2.5" onClick={() => setShowNewEvForm(false)}>Cancel</button>
-              </div>
+              ) : (
+                <>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {[
+                      { key: "name", label: "Full Name", placeholder: "Grace Achieng", type: "text" },
+                      { key: "email", label: "Email", placeholder: "grace@manifest.ke", type: "email" },
+                      { key: "phone", label: "Phone", placeholder: "+254 712 345 000", type: "tel" },
+                    ].map(({ key, label, placeholder, type }) => (
+                      <div key={key} className="flex flex-col gap-1.5">
+                        <label className="sp-label ml-0.5">{label}</label>
+                        <input
+                          type={type}
+                          className="field-input"
+                          placeholder={placeholder}
+                          value={(newEv as any)[key]}
+                          onChange={(e) => setNewEv(p => ({ ...p, [key]: e.target.value }))}
+                        />
+                      </div>
+                    ))}
+                    <div className="flex flex-col gap-1.5">
+                      <label className="sp-label ml-0.5">Team (optional)</label>
+                      <select
+                        className="field-input cursor-pointer"
+                        value={newEv.teamId}
+                        onChange={e => setNewEv(p => ({ ...p, teamId: e.target.value }))}
+                      >
+                        <option value="">— Select team —</option>
+                        {MOCK_TEAMS.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+                      </select>
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                      <label className="sp-label ml-0.5">Role</label>
+                      <select
+                        className="field-input cursor-pointer"
+                        value={newEv.role}
+                        onChange={e => setNewEv(p => ({ ...p, role: e.target.value }))}
+                      >
+                        <option value="evangelist">Evangelist</option>
+                        <option value="data_collector">Data Collector</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <button
+                      className="btn-primary text-sm py-2.5 flex items-center gap-2"
+                      onClick={handleSendInvite}
+                      disabled={inviteEvangelist.isPending}
+                    >
+                      <span className="material-symbols-outlined text-[16px]">send</span>
+                      {inviteEvangelist.isPending ? "Creating…" : "Generate Invite Link"}
+                    </button>
+                    <button className="btn-outline text-sm py-2.5" onClick={() => setShowNewEvForm(false)}>Cancel</button>
+                  </div>
+                </>
+              )}
             </div>
           )}
 
@@ -331,16 +483,14 @@ export default function AdminDashboard() {
               <thead>
                 <tr className="border-b border-outline-variant/15 bg-surface-container-low/50">
                   <th className="text-left px-6 py-3.5 sp-label">Evangelist</th>
-                  <th className="text-left px-4 py-3.5 sp-label hidden md:table-cell">Team</th>
-                  <th className="text-right px-4 py-3.5 sp-label">This Week</th>
-                  <th className="text-right px-4 py-3.5 sp-label hidden lg:table-cell">Total</th>
-                  <th className="text-right px-4 py-3.5 sp-label hidden lg:table-cell">Follow-ups</th>
-                  <th className="text-left px-4 py-3.5 sp-label hidden md:table-cell">Role</th>
+                  <th className="text-left px-4 py-3.5 sp-label hidden md:table-cell">Email</th>
+                  <th className="text-left px-4 py-3.5 sp-label hidden md:table-cell">Phone</th>
+                  <th className="text-left px-4 py-3.5 sp-label">Status</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-outline-variant/10">
                 {MOCK_EVANGELISTS.map((ev) => {
-                  const team = MOCK_TEAMS.find(t => t.id === ev.teamId);
+                  const kpi = kpis.find(k => k.user_id === ev.id);
                   return (
                     <tr key={ev.id} className="hover:bg-surface-container-low/50 transition-colors">
                       <td className="px-6 py-4">
@@ -350,24 +500,22 @@ export default function AdminDashboard() {
                           </div>
                           <div>
                             <p className="font-bold text-on-surface">{ev.name}</p>
-                            <p className="text-xs text-secondary hidden sm:block">{ev.location}</p>
+                            <p className="text-xs text-secondary hidden sm:block">{kpi?.team_name ?? "No team"}</p>
                           </div>
                         </div>
                       </td>
-                      <td className="px-4 py-4 hidden md:table-cell text-secondary text-xs">{team?.name}</td>
-                      <td className="px-4 py-4 text-right font-black text-primary">{ev.thisWeekContacts}</td>
-                      <td className="px-4 py-4 text-right hidden lg:table-cell text-secondary">{ev.totalContacts}</td>
-                      <td className="px-4 py-4 text-right hidden lg:table-cell">
-                        <span className={`font-bold text-xs ${ev.followUpPending > 8 ? "text-error" : "text-secondary"}`}>{ev.followUpPending}</span>
-                      </td>
-                      <td className="px-4 py-4 hidden md:table-cell">
-                        <span className={`px-2.5 py-1 text-[9px] font-black uppercase tracking-wider rounded-full ${
-                          ev.teamRole === "lead"
-                            ? "bg-primary-container/20 text-on-primary-container"
-                            : "bg-surface-container text-on-surface-variant"
-                        }`}>
-                          {ev.teamRole === "lead" ? "Lead" : "Member"}
-                        </span>
+                      <td className="px-4 py-4 hidden md:table-cell text-secondary text-xs">{ev.email}</td>
+                      <td className="px-4 py-4 hidden md:table-cell text-secondary text-xs">{ev.phone || "—"}</td>
+                      <td className="px-4 py-4">
+                        {kpi?.invite_pending ? (
+                          <span className="px-2.5 py-1 text-[10px] font-black uppercase tracking-wider rounded-full bg-orange-100 text-orange-700 flex items-center gap-1 w-fit">
+                            <AlertCircle className="h-2.5 w-2.5" /> Pending Setup
+                          </span>
+                        ) : (
+                          <span className="px-2.5 py-1 text-[10px] font-black uppercase tracking-wider rounded-full bg-green-100 text-green-700">
+                            Active
+                          </span>
+                        )}
                       </td>
                     </tr>
                   );
@@ -391,7 +539,6 @@ export default function AdminDashboard() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {MOCK_TEAMS.map((team) => {
-              const lead = getEvangelist(team.leadEvangelistId);
               const members = MOCK_EVANGELISTS.filter(e => team.memberIds.includes(e.id));
               return (
                 <div key={team.id} className="bg-surface-container-lowest rounded-xl p-8 shadow-sm">
@@ -406,7 +553,6 @@ export default function AdminDashboard() {
                       ))}
                     </div>
                   </div>
-
                   <div className="grid grid-cols-3 gap-3 mb-6">
                     {[
                       { label: "This Month", val: team.thisMonthContacts },
@@ -419,9 +565,9 @@ export default function AdminDashboard() {
                       </div>
                     ))}
                   </div>
-
                   <div>
                     <p className="sp-label mb-3">Members ({members.length})</p>
+                    {members.length === 0 && <p className="text-xs text-secondary">No members assigned</p>}
                     {members.map(ev => (
                       <div key={ev.id} className="flex items-center justify-between py-2">
                         <div className="flex items-center gap-2.5">
@@ -429,11 +575,7 @@ export default function AdminDashboard() {
                             {ev.name.split(" ").map(n => n[0]).join("").slice(0, 2)}
                           </div>
                           <span className="text-sm font-semibold text-on-surface">{ev.name}</span>
-                          {ev.teamRole === "lead" && (
-                            <span className="text-[8px] font-black uppercase tracking-wider text-on-primary-container bg-primary-container/20 px-1.5 py-0.5 rounded-full">Lead</span>
-                          )}
                         </div>
-                        <span className="text-xs text-secondary">{ev.thisWeekContacts} this wk</span>
                       </div>
                     ))}
                   </div>
@@ -487,7 +629,7 @@ export default function AdminDashboard() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
                           <p className="text-sm font-bold text-on-surface">{c.fullName}</p>
-                          <span className={statusBadgeClass(c.status)}>{c.status}</span>
+                          <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${statusBadgeClass(c.status)}`}>{c.status}</span>
                         </div>
                         <p className="text-xs text-secondary">
                           {c.location}{ev && <> · <span className="font-semibold">{ev.name}</span></>}

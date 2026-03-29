@@ -7,14 +7,19 @@ from sqlalchemy.engine.url import URL
 from src.config import settings
 
 
-conn_string = URL.create(
-    "postgresql+asyncpg",
-    username=settings.POSTGRES_USER,
-    database=settings.POSTGRES_DB,
-    password=settings.POSTGRES_PASSWORD,
-    host=settings.POSTGRES_HOST,
-    port=settings.POSTGRES_PORT,
-)
+if settings.DATABASE_URL:
+    conn_string = settings.DATABASE_URL
+else:
+    if not all([settings.POSTGRES_USER, settings.POSTGRES_PASSWORD, settings.POSTGRES_DB, settings.POSTGRES_HOST, settings.POSTGRES_PORT]):
+        raise RuntimeError("Set DATABASE_URL or all POSTGRES_* vars in .env")
+    conn_string = URL.create(
+        "postgresql+asyncpg",
+        username=settings.POSTGRES_USER,
+        database=settings.POSTGRES_DB,
+        password=settings.POSTGRES_PASSWORD,
+        host=settings.POSTGRES_HOST,
+        port=settings.POSTGRES_PORT,
+    )
 
 session_config = AsyncSessionConfig(expire_on_commit=False)
 

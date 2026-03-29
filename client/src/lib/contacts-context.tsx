@@ -32,6 +32,7 @@ export interface Contact {
   status: string;
   tags: string[];
   evangelistId: string;
+  evangelistName?: string;
   teamId: string;
   createdAt: string;
 }
@@ -57,6 +58,7 @@ function toContact(c: ApiContact): Contact {
     status: c.status,
     tags: c.tags,
     evangelistId: c.evangelist_id,
+    evangelistName: c.evangelist_name,
     teamId: c.team_id,
     createdAt: c.created_at,
   };
@@ -64,22 +66,28 @@ function toContact(c: ApiContact): Contact {
 
 interface ContactsContextType {
   contacts: Contact[];
-  addContact: (contact: Partial<Contact> & Record<string, unknown>) => void;
+  isLoading: boolean;
+  addContact: (contact: Partial<Contact> & Record<string, unknown>, onSuccess?: () => void, onError?: () => void) => void;
 }
 
 const ContactsContext = createContext<ContactsContextType | undefined>(undefined);
 
+function normalizeYesNo(val: unknown, fallback = "Not Sure"): string {
+  if (val === "Unsure") return "Not Sure";
+  return (val as string) ?? fallback;
+}
+
 export function ContactsProvider({ children }: { children: ReactNode }) {
-  const { data: apiContacts = [] } = useContactsApi();
+  const { data: apiContacts = [], isLoading } = useContactsApi();
   const { data: teams = [] } = useTeams();
   const { user } = useAuth();
   const createContact = useCreateContact();
 
   const contacts: Contact[] = apiContacts.map(toContact);
 
-  const addContact = (formData: Partial<Contact> & Record<string, unknown>) => {
-    // Pick the user's first team or the first available team
-    const teamId = teams[0]?.id ?? "";
+  const addContact = (formData: Partial<Contact> & Record<string, unknown>, onSuccess?: () => void, onError?: () => void) => {
+    const teamId = (formData.teamId ?? formData.team_id ?? teams[0]?.id ?? "") as string;
+    if (!teamId) { onError?.(); return; }
 
     createContact.mutate({
       full_name: (formData.fullName ?? formData.full_name ?? "") as string,
@@ -87,9 +95,9 @@ export function ContactsProvider({ children }: { children: ReactNode }) {
       email: formData.email as string | undefined,
       gender: formData.gender as string | undefined,
       age_range: (formData.ageRange ?? formData.age_range) as string | undefined,
-      born_again: (formData.bornAgain ?? formData.born_again ?? "Not Sure") as string,
+      born_again: normalizeYesNo(formData.bornAgain ?? formData.born_again),
       discipleship_status: (formData.discipleshipStatus ?? formData.discipleship_status ?? "Not Started") as string,
-      baptized: (formData.baptized ?? "Not Sure") as string,
+      baptized: normalizeYesNo(formData.baptized),
       location: (formData.location ?? "") as string,
       is_student: (formData.isStudent ?? formData.is_student ?? false) as boolean,
       institution: formData.institution as string | undefined,
@@ -97,13 +105,14 @@ export function ContactsProvider({ children }: { children: ReactNode }) {
       follow_up_method: (formData.followUpMethod ?? formData.follow_up_method ?? "Call") as string,
       prayer_requests: (formData.prayerRequests ?? formData.prayer_requests) as string | undefined,
       notes: formData.notes as string | undefined,
+      status: (formData.followUpStatus ?? formData.status ?? "New") as string,
       tags: (formData.tags ?? []) as string[],
-      team_id: (formData.teamId ?? formData.team_id ?? teamId) as string,
-    } as any);
+      team_id: teamId,
+    } as any, { onSuccess, onError });
   };
 
   return (
-    <ContactsContext.Provider value={{ contacts, addContact }}>
+    <ContactsContext.Provider value={{ contacts, isLoading, addContact }}>
       {children}
     </ContactsContext.Provider>
   );
