@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { useContacts } from "@/lib/contacts-context";
 
 const contactSchema = z.object({
@@ -44,7 +44,6 @@ const contactSchema = z.object({
 
 export default function ContactFormPage() {
   const [, setLocation] = useLocation();
-  const { toast } = useToast();
   const { addContact } = useContacts();
   
   const form = useForm<z.infer<typeof contactSchema>>({
@@ -66,14 +65,16 @@ export default function ContactFormPage() {
   const bestTimes = form.watch("bestTimes");
 
   function onSubmit(values: z.infer<typeof contactSchema>) {
-    addContact({ ...values, tags: [] });
-    
-    toast({
-      title: "Contact Saved",
-      description: "New outreach contact has been successfully recorded.",
-    });
-    // Simulate delay then redirect
-    setTimeout(() => setLocation("/contacts"), 500);
+    addContact(
+      { ...values },
+      () => {
+        toast.success("Contact saved", { description: "Outreach contact recorded." });
+        setLocation("/contacts");
+      },
+      () => {
+        toast.error("Failed to save contact", { description: "Check your connection and try again." });
+      },
+    );
   }
 
   return (
