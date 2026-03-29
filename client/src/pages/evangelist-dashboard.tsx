@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "wouter";
 import { useAuth } from "@/lib/auth";
 import { useEvangelistDashboard } from "@/lib/api/dashboard";
 import { useContacts } from "@/lib/contacts-context";
@@ -63,6 +64,7 @@ const ACTIVITY_FEED = [
 
 export default function EvangelistDashboard() {
   const { user } = useAuth();
+  const [, navigate] = useLocation();
   const { data: dashboard } = useEvangelistDashboard();
   const { contacts: myContacts } = useContacts();
   const { data: teams = [] } = useTeams();
@@ -117,7 +119,10 @@ export default function EvangelistDashboard() {
           </div>
           <div className="flex gap-3 flex-wrap">
             <button className="btn-outline text-sm py-2.5 px-5">Export PDF</button>
-            <button className="btn-primary text-sm py-2.5 px-5 flex items-center gap-2">
+            <button
+              className="btn-primary text-sm py-2.5 px-5 flex items-center gap-2"
+              onClick={() => navigate("/contacts/new")}
+            >
               <span className="material-symbols-outlined text-[18px]">person_add</span>
               New Contact
             </button>

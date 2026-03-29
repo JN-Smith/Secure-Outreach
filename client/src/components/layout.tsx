@@ -11,20 +11,26 @@ function getNavItems(role: string | undefined): NavItem[] {
     return [
       { name: "My Dashboard", href: "/", icon: "person_pin" },
       { name: "My Contacts", href: "/contacts", icon: "contacts" },
-      { name: "New Contact", href: "/contacts/new", icon: "person_add" },
+      { name: "Follow-ups", href: "/followups", icon: "diversity_3" },
     ];
   }
   if (role === "pastor") {
     return [
       { name: "Ministry Overview", href: "/", icon: "church" },
       { name: "All Contacts", href: "/contacts", icon: "contacts" },
+      { name: "Evangelists", href: "/evangelists", icon: "volunteer_activism" },
+      { name: "Analytics", href: "/analytics", icon: "bar_chart_4_bars" },
+      { name: "Follow-ups", href: "/followups", icon: "diversity_3" },
       { name: "Settings", href: "/settings", icon: "settings" },
     ];
   }
+  // admin
   return [
     { name: "Dashboard", href: "/", icon: "dashboard" },
     { name: "All Contacts", href: "/contacts", icon: "contacts" },
-    { name: "New Contact", href: "/contacts/new", icon: "person_add" },
+    { name: "Evangelists", href: "/evangelists", icon: "volunteer_activism" },
+    { name: "Analytics", href: "/analytics", icon: "bar_chart_4_bars" },
+    { name: "Follow-ups", href: "/followups", icon: "diversity_3" },
     { name: "Settings", href: "/settings", icon: "settings" },
   ];
 }
@@ -105,7 +111,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       {/* ── Top App Bar ── */}
       <header className="fixed top-0 w-full z-50 h-16 bg-[#f6f6f6] border-b border-outline-variant/20 backdrop-blur-xl flex items-center justify-between px-6 shadow-sm shadow-black/[0.04]">
         <div className="flex items-center gap-3">
-          {/* Mobile menu trigger */}
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
               <button className="md:hidden p-2 rounded-lg text-secondary hover:bg-surface-container transition-colors">
@@ -120,7 +125,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <SidebarInner onNav={() => setMobileOpen(false)} />
             </SheetContent>
           </Sheet>
-
           <h1 className="text-lg font-extrabold text-on-surface tracking-tight">Manifest Kenya</h1>
         </div>
 
@@ -146,11 +150,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
       {/* ── Mobile Bottom Nav ── */}
       <nav className="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 bg-white rounded-t-xl border-t border-outline-variant/15 shadow-[0_-4px_20px_0_rgba(81,93,105,0.06)]">
-        {navigation.slice(0, 4).map((item) => {
+        {navigation.slice(0, 5).map((item) => {
           const active = location === item.href;
           return (
             <Link key={item.name} href={item.href}>
-              <div className={`flex flex-col items-center justify-center gap-0.5 px-3 py-1.5 rounded-xl transition-all active:scale-90 ${
+              <div className={`flex flex-col items-center justify-center gap-0.5 px-2 py-1.5 rounded-xl transition-all active:scale-90 ${
                 active
                   ? "bg-primary-container text-on-primary-fixed"
                   : "text-secondary hover:text-primary"
