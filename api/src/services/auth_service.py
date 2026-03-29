@@ -1,3 +1,4 @@
+import secrets
 import uuid
 from datetime import datetime, timedelta, timezone
 from typing import Optional
@@ -9,7 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.config import settings
 from src.db.models.user import User
-from src.schemas.auth import TokenResponse, UserCreate, UserRead
+from src.schemas.auth import EvangelistInvite, TokenResponse, UserCreate, UserRead
 
 
 def hash_password(password: str) -> str:
@@ -45,8 +46,12 @@ def _create_refresh_token(user: User) -> str:
 async def login(db: AsyncSession, email: str, password: str) -> Optional[tuple[str, str, User]]:
     result = await db.execute(select(User).where(User.email == email, User.is_active == True))  # noqa: E712
     user = result.scalar_one_or_none()
-    if not user or not verify_password(password, user.password_hash):
+    if not user or user.password_hash is None or not verify_password(password, user.password_hash):
         return None
+    user.last_login_at = datetime.now(timezone.utc)
+    user.login_count = (user.login_count or 0) + 1
+    await db.commit()
+    await db.refresh(user)
     return _create_access_token(user), _create_refresh_token(user), user
 
 
@@ -84,6 +89,43 @@ async def create_user(db: AsyncSession, data: UserCreate) -> User:
         location=data.location,
     )
     db.add(user)
+    await db.commit()
+    await db.refresh(user)
+    return user
+
+
+async def create_invite(db: AsyncSession, data: EvangelistInvite) -> tuple[User, str]:
+    token = secrets.token_urlsafe(32)
+    user = User(
+        email=data.email,
+        password_hash=None,
+        role=data.role,
+        full_name=data.full_name,
+        phone=data.phone,
+        invite_token=token,
+    )
+    db.add(user)
+    await db.commit()
+    await db.refresh(user)
+    return user, token
+
+
+async def get_invite_info(db: AsyncSession, token: str) -> Optional[User]:
+    result = await db.execute(
+        select(User).where(User.invite_token == token, User.is_active == True)  # noqa: E712
+    )
+    return result.scalar_one_or_none()
+
+
+async def accept_invite(db: AsyncSession, token: str, password: str) -> Optional[User]:
+    result = await db.execute(
+        select(User).where(User.invite_token == token, User.is_active == True)  # noqa: E712
+    )
+    user = result.scalar_one_or_none()
+    if not user:
+        return None
+    user.password_hash = hash_password(password)
+    user.invite_token = None
     await db.commit()
     await db.refresh(user)
     return user

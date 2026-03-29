@@ -1,9 +1,16 @@
 import uuid
 
 from advanced_alchemy.base import UUIDAuditBase
-from sqlalchemy import Boolean, ForeignKey, String, Text
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy import Boolean, ForeignKey, JSON, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
+
+from src.config import settings
+
+# Use JSONB on Postgres for indexing support; fall back to generic JSON on SQLite
+if not settings.DATABASE_URL or not settings.DATABASE_URL.startswith("sqlite"):
+    from sqlalchemy.dialects.postgresql import JSONB
+else:
+    JSONB = JSON  # type: ignore[assignment,misc]
 
 
 class Contact(UUIDAuditBase):
