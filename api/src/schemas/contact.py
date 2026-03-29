@@ -55,6 +55,7 @@ class ContactRead(BaseModel):
     status: str
     tags: list
     evangelist_id: uuid.UUID
+    evangelist_name: str | None = None   # enriched in the route
     team_id: uuid.UUID
     created_at: datetime
     updated_at: datetime

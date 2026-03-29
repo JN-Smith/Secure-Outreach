@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 
 from pydantic import BaseModel
 
@@ -71,3 +71,18 @@ class PastorDashboard(BaseModel):
     team_performance: list[TeamPerformance]
     top_evangelists: list[TopEvangelist]
     recent_sessions: list[RecentSession]
+
+
+class EvangelistKPI(BaseModel):
+    user_id: str
+    full_name: str
+    email: str
+    team_name: str | None
+    contacts_total: int
+    contacts_this_week: int
+    followups_done: int
+    followups_pending: int
+    converted: int
+    last_login_at: datetime | None
+    login_count: int
+    invite_pending: bool
