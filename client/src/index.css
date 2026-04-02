@@ -30,27 +30,27 @@
   --color-input:                 hsl(var(--input));
   --color-ring:                  hsl(var(--ring));
 
-  /* Sacred Precision Amber — tonal surface system */
-  --color-surface:                   #f6f6f6;
-  --color-surface-bright:            #f6f6f6;
-  --color-surface-dim:               #d2d5d5;
-  --color-surface-container-lowest:  #ffffff;
-  --color-surface-container-low:     #f0f1f1;
-  --color-surface-container:         #e7e8e8;
-  --color-surface-container-high:    #e1e3e3;
-  --color-surface-container-highest: #dbdddd;
-  --color-on-surface:                #2d2f2f;
-  --color-on-surface-variant:        #5a5c5c;
-  --color-primary-container:         #fca21e;
-  --color-on-primary-container:      #4d2e00;
-  --color-on-primary-fixed:          #2e1900;
-  --color-secondary-container:       #d8e4f3;
-  --color-on-secondary-container:    #48535f;
-  --color-tertiary-fixed:            #ffd709;
-  --color-outline:                   #757777;
-  --color-outline-variant:           #acadad;
-  --color-error:                     #b02500;
-  --color-error-container:           #f95630;
+  /* Sacred Precision Amber — tonal surface system (via CSS vars for dark mode) */
+  --color-surface:                   var(--sp-surface);
+  --color-surface-bright:            var(--sp-surface-bright);
+  --color-surface-dim:               var(--sp-surface-dim);
+  --color-surface-container-lowest:  var(--sp-surface-container-lowest);
+  --color-surface-container-low:     var(--sp-surface-container-low);
+  --color-surface-container:         var(--sp-surface-container);
+  --color-surface-container-high:    var(--sp-surface-container-high);
+  --color-surface-container-highest: var(--sp-surface-container-highest);
+  --color-on-surface:                var(--sp-on-surface);
+  --color-on-surface-variant:        var(--sp-on-surface-variant);
+  --color-primary-container:         var(--sp-primary-container);
+  --color-on-primary-container:      var(--sp-on-primary-container);
+  --color-on-primary-fixed:          var(--sp-on-primary-fixed);
+  --color-secondary-container:       var(--sp-secondary-container);
+  --color-on-secondary-container:    var(--sp-on-secondary-container);
+  --color-tertiary-fixed:            var(--sp-tertiary-fixed);
+  --color-outline:                   var(--sp-outline);
+  --color-outline-variant:           var(--sp-outline-variant);
+  --color-error:                     var(--sp-error);
+  --color-error-container:           var(--sp-error-container);
 
   /* Sidebar tokens */
   --color-sidebar:                    hsl(var(--sidebar));
@@ -112,6 +112,28 @@
   --chart-4: 145 40% 45%;
   --chart-5: 280 40% 55%;
 
+  /* Sacred Precision — light mode surface values */
+  --sp-surface:                   #f6f6f6;
+  --sp-surface-bright:            #f6f6f6;
+  --sp-surface-dim:               #d2d5d5;
+  --sp-surface-container-lowest:  #ffffff;
+  --sp-surface-container-low:     #f0f1f1;
+  --sp-surface-container:         #e7e8e8;
+  --sp-surface-container-high:    #e1e3e3;
+  --sp-surface-container-highest: #dbdddd;
+  --sp-on-surface:                #2d2f2f;
+  --sp-on-surface-variant:        #5a5c5c;
+  --sp-primary-container:         #fca21e;
+  --sp-on-primary-container:      #4d2e00;
+  --sp-on-primary-fixed:          #2e1900;
+  --sp-secondary-container:       #d8e4f3;
+  --sp-on-secondary-container:    #48535f;
+  --sp-tertiary-fixed:            #ffd709;
+  --sp-outline:                   #757777;
+  --sp-outline-variant:           #acadad;
+  --sp-error:                     #b02500;
+  --sp-error-container:           #f95630;
+
   /* Sidebar — white, like stitch design */
   --sidebar: 0 0% 100%;
   --sidebar-foreground: 180 4% 18%;
@@ -161,23 +183,27 @@
   --sidebar-border: 180 4% 22%;
   --sidebar-ring: 37 97% 55%;
 
-  --color-surface:                   #1a1c1c;
-  --color-surface-bright:            #222424;
-  --color-surface-dim:               #111313;
-  --color-surface-container-lowest:  #212323;
-  --color-surface-container-low:     #252727;
-  --color-surface-container:         #2a2c2c;
-  --color-surface-container-high:    #2f3131;
-  --color-surface-container-highest: #343636;
-  --color-on-surface:                #e7e8e8;
-  --color-on-surface-variant:        #acadad;
-  --color-primary-container:         #fca21e;
-  --color-on-primary-container:      #2e1900;
-  --color-on-primary-fixed:          #2e1900;
-  --color-secondary-container:       #2a3540;
-  --color-on-secondary-container:    #b0bec8;
-  --color-outline:                   #5a5c5c;
-  --color-outline-variant:           #3a3c3c;
+  /* Sacred Precision — dark mode surface values */
+  --sp-surface:                   #1a1c1c;
+  --sp-surface-bright:            #222424;
+  --sp-surface-dim:               #111313;
+  --sp-surface-container-lowest:  #212323;
+  --sp-surface-container-low:     #252727;
+  --sp-surface-container:         #2a2c2c;
+  --sp-surface-container-high:    #2f3131;
+  --sp-surface-container-highest: #343636;
+  --sp-on-surface:                #e7e8e8;
+  --sp-on-surface-variant:        #acadad;
+  --sp-primary-container:         #fca21e;
+  --sp-on-primary-container:      #2e1900;
+  --sp-on-primary-fixed:          #2e1900;
+  --sp-secondary-container:       #2a3540;
+  --sp-on-secondary-container:    #b0bec8;
+  --sp-tertiary-fixed:            #ffd709;
+  --sp-outline:                   #5a5c5c;
+  --sp-outline-variant:           #3a3c3c;
+  --sp-error:                     #f95630;
+  --sp-error-container:           #7a1a00;
 }
 
 @layer base {
