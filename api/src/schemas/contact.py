@@ -21,7 +21,7 @@ class ContactCreate(BaseModel):
     prayer_requests: str | None = None
     notes: str | None = None
     tags: list[str] = []
-    team_id: uuid.UUID
+    team_id: uuid.UUID | None = None
 
 
 class ContactUpdate(BaseModel):
@@ -56,7 +56,7 @@ class ContactRead(BaseModel):
     tags: list
     evangelist_id: uuid.UUID
     evangelist_name: str | None = None   # enriched in the route
-    team_id: uuid.UUID
+    team_id: uuid.UUID | None
     created_at: datetime
     updated_at: datetime
     model_config = ConfigDict(from_attributes=True)

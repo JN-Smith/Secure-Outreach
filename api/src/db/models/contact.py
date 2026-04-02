@@ -36,6 +36,6 @@ class Contact(UUIDAuditBase):
     evangelist_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
-    team_id: Mapped[uuid.UUID] = mapped_column(
-        ForeignKey("teams.id", ondelete="CASCADE"), nullable=False
+    team_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("teams.id", ondelete="SET NULL"), nullable=True
     )

@@ -5,7 +5,6 @@
  */
 import { createContext, useContext, ReactNode } from "react";
 import { useContacts as useContactsApi, useCreateContact, Contact as ApiContact } from "./api/contacts";
-import { useTeams } from "./api/teams";
 import { useAuth } from "./auth";
 
 // Legacy camelCase Contact shape (used by contacts-page and contact-form-page)
@@ -33,7 +32,7 @@ export interface Contact {
   tags: string[];
   evangelistId: string;
   evangelistName?: string;
-  teamId: string;
+  teamId?: string;
   createdAt: string;
 }
 
@@ -79,16 +78,12 @@ function normalizeYesNo(val: unknown, fallback = "Not Sure"): string {
 
 export function ContactsProvider({ children }: { children: ReactNode }) {
   const { data: apiContacts = [], isLoading } = useContactsApi();
-  const { data: teams = [] } = useTeams();
   const { user } = useAuth();
   const createContact = useCreateContact();
 
   const contacts: Contact[] = apiContacts.map(toContact);
 
   const addContact = (formData: Partial<Contact> & Record<string, unknown>, onSuccess?: () => void, onError?: () => void) => {
-    const teamId = (formData.teamId ?? formData.team_id ?? teams[0]?.id ?? "") as string;
-    if (!teamId) { onError?.(); return; }
-
     createContact.mutate({
       full_name: (formData.fullName ?? formData.full_name ?? "") as string,
       phone: (formData.phone ?? "") as string,
@@ -107,7 +102,6 @@ export function ContactsProvider({ children }: { children: ReactNode }) {
       notes: formData.notes as string | undefined,
       status: (formData.followUpStatus ?? formData.status ?? "New") as string,
       tags: (formData.tags ?? []) as string[],
-      team_id: teamId,
     } as any, { onSuccess, onError });
   };
 

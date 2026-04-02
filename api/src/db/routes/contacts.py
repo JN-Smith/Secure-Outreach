@@ -8,6 +8,7 @@ from src.db.routes.auth import get_current_user, require_admin, require_any
 from src.db.setup import get_session
 from src.db.models.user import User
 from src.db.models.contact import Contact
+from src.db.models.team import TeamMember
 from src.schemas.contact import ContactCreate, ContactRead, ContactUpdate
 from src.services.contacts_service import (
     create_contact,
@@ -63,6 +64,14 @@ async def create_contact_route(
     current_user: User = Depends(require_any),
     db: AsyncSession = Depends(get_session),
 ):
+    # Auto-assign team from the user's membership if not supplied
+    if not data.team_id:
+        result = await db.execute(
+            select(TeamMember.team_id).where(TeamMember.user_id == current_user.id).limit(1)
+        )
+        row = result.scalar_one_or_none()
+        if row:
+            data = data.model_copy(update={"team_id": row})
     contact = await create_contact(db, data, evangelist_id=current_user.id)
     enriched = await _enrich([contact], db)
     return enriched[0]
