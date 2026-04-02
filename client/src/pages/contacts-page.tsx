@@ -19,10 +19,10 @@ import {
 import { toast } from "sonner";
 
 const OUTCOME_STYLE: Record<string, string> = {
-  Positive: "bg-green-100 text-green-700",
-  Neutral: "bg-amber-100 text-amber-700",
-  "No Response": "bg-gray-100 text-gray-500",
-  "Not Interested": "bg-red-100 text-red-600",
+  Positive: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300",
+  Neutral: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
+  "No Response": "bg-gray-100 text-gray-500 dark:bg-surface-container dark:text-on-surface-variant",
+  "Not Interested": "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400",
 };
 
 function ContactFollowUpHistory({ contactId }: { contactId: string }) {
@@ -63,11 +63,11 @@ function initials(name: string) {
 }
 
 const STATUS_BADGE: Record<string, string> = {
-  New: "bg-amber-100 text-amber-700",
-  "Needs Follow-up": "bg-orange-100 text-orange-700",
-  "Actively Discipling": "bg-purple-100 text-purple-700",
-  "Connected to Church": "bg-green-100 text-green-700",
-  "Not Interested": "bg-gray-100 text-gray-500",
+  New: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
+  "Needs Follow-up": "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300",
+  "Actively Discipling": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300",
+  "Connected to Church": "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300",
+  "Not Interested": "bg-gray-100 text-gray-500 dark:bg-surface-container dark:text-on-surface-variant",
 };
 
 const AVATAR_COLORS = ["bg-amber-500", "bg-orange-400", "bg-yellow-500", "bg-stone-500", "bg-amber-700"];
@@ -182,7 +182,7 @@ export default function ContactsPage() {
           placeholder="Search by name or area..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="pl-9 bg-white"
+          className="pl-9 bg-surface-container-lowest"
         />
       </div>
 
@@ -242,7 +242,7 @@ export default function ContactsPage() {
                   ))}
                 </div>
               )}
-              <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${STATUS_BADGE[c.status] ?? "bg-gray-100 text-gray-600"}`}>
+              <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${STATUS_BADGE[c.status] ?? "bg-surface-container text-on-surface-variant"}`}>
                 {c.status === "Needs Follow-up" ? "Follow-up" : c.status}
               </span>
               <ChevronRight className="h-4 w-4 text-muted-foreground flex-shrink-0" />

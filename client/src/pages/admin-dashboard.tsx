@@ -16,11 +16,11 @@ const PIPELINE_COLORS: Record<string, string> = {
 
 const statusBadgeClass = (status: string) => {
   switch (status) {
-    case "New": return "bg-blue-100 text-blue-700";
-    case "Needs Follow-up": return "bg-orange-100 text-orange-700";
-    case "Actively Discipling": return "bg-purple-100 text-purple-700";
-    case "Connected to Church": return "bg-green-100 text-green-700";
-    default: return "bg-gray-100 text-gray-700";
+    case "New": return "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300";
+    case "Needs Follow-up": return "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300";
+    case "Actively Discipling": return "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300";
+    case "Connected to Church": return "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300";
+    default: return "bg-gray-100 text-gray-700 dark:bg-surface-container dark:text-on-surface-variant";
   }
 };
 import {

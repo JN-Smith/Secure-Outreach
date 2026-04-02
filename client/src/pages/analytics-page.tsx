@@ -58,13 +58,13 @@ export default function AnalyticsPage() {
         <KPICard label="Follow-ups Done" value={followupsDone} color="text-green-600" />
         <KPICard label="Pending Follow-up" value={pending} color="text-orange-500" />
         <KPICard label="Converted" value={converted} sub="connected to church" color="text-purple-600" />
-        <KPICard label="Pending Setup" value={pendingSetup} sub="awaiting password" color="text-gray-500" />
+        <KPICard label="Pending Setup" value={pendingSetup} sub="awaiting password" color="text-on-surface-variant" />
       </div>
 
       {/* Per-evangelist breakdown */}
       <div className="bg-surface-container-lowest rounded-xl border overflow-hidden">
         <div className="px-6 py-4 border-b bg-gray-50/70">
-          <p className="text-sm font-bold text-gray-900">Evangelist Activity Breakdown</p>
+          <p className="text-sm font-bold text-on-surface">Evangelist Activity Breakdown</p>
           <p className="text-xs text-muted-foreground mt-0.5">
             Login frequency, contacts made, and follow-up progress per evangelist
           </p>
@@ -85,11 +85,11 @@ export default function AnalyticsPage() {
                 <tr key={k.user_id} className="hover:bg-gray-50/50 transition-colors">
                   <td className="px-6 py-3.5">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center text-amber-700 font-bold text-xs flex-shrink-0">
+                      <div className="w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center text-amber-700 dark:text-amber-300 font-bold text-xs flex-shrink-0">
                         {initials(k.full_name)}
                       </div>
                       <div>
-                        <p className="font-semibold text-gray-900 text-sm">{k.full_name}</p>
+                        <p className="font-semibold text-on-surface text-sm">{k.full_name}</p>
                         {k.invite_pending && (
                           <span className="flex items-center gap-0.5 text-[10px] text-orange-500 font-bold uppercase tracking-wide">
                             <AlertCircle className="h-2.5 w-2.5" /> Pending Setup
@@ -109,7 +109,7 @@ export default function AnalyticsPage() {
                   </td>
                   <td className="px-4 py-3.5 text-right font-semibold text-purple-700">{k.converted}</td>
                   <td className="px-4 py-3.5 text-sm">
-                    <span className={!k.last_login_at ? "text-muted-foreground/50" : "text-gray-700 font-medium"}>
+                    <span className={!k.last_login_at ? "text-muted-foreground/50" : "text-on-surface font-medium"}>
                       {formatLoginTime(k.last_login_at)}
                     </span>
                   </td>

@@ -83,7 +83,7 @@ export default function AdminsPage() {
 
           {inviteLink ? (
             <div className="space-y-3">
-              <div className="flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+              <div className="flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 dark:bg-amber-900/20 dark:border-amber-700/40 rounded-lg">
                 <Mail className="h-4 w-4 text-amber-600 flex-shrink-0 mt-0.5" />
                 <p className="text-xs font-mono text-amber-800 break-all flex-1">{inviteLink}</p>
               </div>
@@ -109,7 +109,7 @@ export default function AdminsPage() {
                 <div className="space-y-1">
                   <label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Full Name *</label>
                   <input
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+                    className="w-full border border-outline-variant/40 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
                     placeholder="John Kamau"
                     value={form.name}
                     onChange={e => setForm(p => ({ ...p, name: e.target.value }))}
@@ -119,7 +119,7 @@ export default function AdminsPage() {
                   <label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Email *</label>
                   <input
                     type="email"
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+                    className="w-full border border-outline-variant/40 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
                     placeholder="john@manifest.ke"
                     value={form.email}
                     onChange={e => setForm(p => ({ ...p, email: e.target.value }))}
@@ -129,7 +129,7 @@ export default function AdminsPage() {
                   <label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Phone</label>
                   <input
                     type="tel"
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+                    className="w-full border border-outline-variant/40 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
                     placeholder="+254 712 345 000"
                     value={form.phone}
                     onChange={e => setForm(p => ({ ...p, phone: e.target.value }))}
@@ -147,7 +147,7 @@ export default function AdminsPage() {
                 </button>
                 <button
                   onClick={() => setShowForm(false)}
-                  className="text-sm font-semibold text-muted-foreground hover:text-foreground border border-gray-200 px-4 py-2.5 rounded-lg transition-colors"
+                  className="text-sm font-semibold text-muted-foreground hover:text-foreground border border-outline-variant/40 px-4 py-2.5 rounded-lg transition-colors"
                 >
                   Cancel
                 </button>
@@ -181,7 +181,7 @@ export default function AdminsPage() {
                 <tr key={admin.id} className="hover:bg-gray-50/50 transition-colors">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full bg-amber-100 flex items-center justify-center text-amber-700 font-bold text-xs flex-shrink-0">
+                      <div className="w-9 h-9 rounded-full bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center text-amber-700 dark:text-amber-300 font-bold text-xs flex-shrink-0">
                         {initials(admin.full_name)}
                       </div>
                       <p className="font-semibold text-gray-900">{admin.full_name}</p>
@@ -191,11 +191,11 @@ export default function AdminsPage() {
                   <td className="px-4 py-4 hidden lg:table-cell text-muted-foreground text-xs">{admin.phone ?? "—"}</td>
                   <td className="px-4 py-4">
                     {admin.invite_pending ? (
-                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-orange-100 text-orange-700">
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300">
                         <AlertCircle className="h-3 w-3" /> Pending Setup
                       </span>
                     ) : (
-                      <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700">Active</span>
+                      <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300">Active</span>
                     )}
                   </td>
                 </tr>

@@ -7,13 +7,13 @@ import { useTeams } from "@/lib/api/teams";
 
 const statusBadgeClass = (status: string) => {
   const map: Record<string, string> = {
-    "New": "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-100 text-blue-700",
-    "Needs Follow-up": "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-orange-100 text-orange-700",
-    "Actively Discipling": "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-purple-100 text-purple-700",
-    "Connected to Church": "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-green-100 text-green-700",
-    "Not Interested": "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-gray-100 text-gray-700",
+    "New": "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
+    "Needs Follow-up": "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300",
+    "Actively Discipling": "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300",
+    "Connected to Church": "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300",
+    "Not Interested": "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-gray-100 text-gray-700 dark:bg-surface-container dark:text-on-surface-variant",
   };
-  return map[status] ?? "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-gray-100 text-gray-700";
+  return map[status] ?? "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-gray-100 text-gray-700 dark:bg-surface-container dark:text-on-surface-variant";
 };
 import {
   BarChart,

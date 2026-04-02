@@ -13,18 +13,18 @@ const OUTCOMES = ["Positive", "Neutral", "No Response", "Not Interested"];
 const STATUSES = ["New", "Needs Follow-up", "Actively Discipling", "Connected to Church", "Not Interested"];
 
 const OUTCOME_STYLE: Record<string, string> = {
-  Positive: "bg-green-100 text-green-700",
-  Neutral: "bg-amber-100 text-amber-700",
-  "No Response": "bg-gray-100 text-gray-500",
-  "Not Interested": "bg-red-100 text-red-600",
+  Positive: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300",
+  Neutral: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
+  "No Response": "bg-gray-100 text-gray-500 dark:bg-surface-container dark:text-on-surface-variant",
+  "Not Interested": "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400",
 };
 
 const STATUS_STYLE: Record<string, string> = {
-  New: "bg-amber-100 text-amber-700",
-  "Needs Follow-up": "bg-orange-100 text-orange-700",
-  "Actively Discipling": "bg-purple-100 text-purple-700",
-  "Connected to Church": "bg-green-100 text-green-700",
-  "Not Interested": "bg-gray-100 text-gray-500",
+  New: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
+  "Needs Follow-up": "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300",
+  "Actively Discipling": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300",
+  "Connected to Church": "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300",
+  "Not Interested": "bg-gray-100 text-gray-500 dark:bg-surface-container dark:text-on-surface-variant",
 };
 
 function initials(name: string) {
@@ -42,7 +42,7 @@ function ContactHistory({ contactId }: { contactId: string }) {
           <div className="flex items-center justify-between">
             <span className="font-semibold">{log.method}</span>
             <div className="flex gap-1.5 items-center">
-              <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${OUTCOME_STYLE[log.outcome] ?? "bg-gray-100 text-gray-600"}`}>
+              <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${OUTCOME_STYLE[log.outcome] ?? "bg-surface-container text-on-surface-variant"}`}>
                 {log.outcome}
               </span>
               <span className="text-xs text-muted-foreground">{new Date(log.date).toLocaleDateString("en-KE", { day: "numeric", month: "short", year: "numeric" })}</span>
@@ -143,7 +143,7 @@ export default function FollowUpsPage() {
                     <p className="text-sm font-semibold truncate">{c.fullName}</p>
                     <p className="text-xs text-muted-foreground">{c.phone} · {c.followUpMethod}</p>
                   </div>
-                  <span className={`px-2 py-0.5 rounded-full text-xs font-semibold hidden sm:inline ${STATUS_STYLE[c.status] ?? "bg-gray-100 text-gray-600"}`}>
+                  <span className={`px-2 py-0.5 rounded-full text-xs font-semibold hidden sm:inline ${STATUS_STYLE[c.status] ?? "bg-surface-container text-on-surface-variant"}`}>
                     {c.status}
                   </span>
                   <div className="flex gap-1">

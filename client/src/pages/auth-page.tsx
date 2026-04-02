@@ -30,22 +30,22 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-between bg-[#EDE8DF] py-10 px-4">
+    <div className="min-h-screen flex flex-col items-center justify-between bg-surface py-10 px-4">
       {/* Header */}
       <div className="flex flex-col items-center gap-3 mt-4">
         <img src="/logo.png" alt="Manifest Kenya" className="h-20 w-auto" />
-        <p className="text-xs font-semibold tracking-[0.2em] text-[#6B6B6B] uppercase">
+        <p className="text-xs font-semibold tracking-[0.2em] text-on-surface-variant uppercase">
           Ecclesiastical Management
         </p>
       </div>
 
       {/* Card */}
       <div className="w-full max-w-sm mt-8">
-        <div className="h-1 w-full bg-[#F5A623] rounded-t-sm" />
-        <div className="bg-white rounded-b-2xl shadow-md px-7 py-8 space-y-6">
+        <div className="h-1 w-full bg-primary-container rounded-t-sm" />
+        <div className="bg-surface-container-lowest rounded-b-2xl shadow-md px-7 py-8 space-y-6">
           <div className="space-y-1">
-            <h2 className="text-2xl font-bold text-[#1C1C1C]">Secure Access</h2>
-            <p className="text-sm text-[#6B6B6B] leading-relaxed">
+            <h2 className="text-2xl font-bold text-on-surface">Secure Access</h2>
+            <p className="text-sm text-on-surface-variant leading-relaxed">
               Please authenticate with your ministry credentials to continue your mission strategy.
             </p>
           </div>
@@ -53,15 +53,15 @@ export default function AuthPage() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
             {/* Email */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold tracking-[0.15em] text-[#4A4A4A] uppercase">
+              <label className="text-xs font-semibold tracking-[0.15em] text-on-surface uppercase">
                 Work Email
               </label>
-              <div className="flex items-center gap-3 bg-[#F0EBE3] rounded-lg px-4 h-12">
-                <Mail className="h-4 w-4 text-[#9B9B9B] shrink-0" />
+              <div className="flex items-center gap-3 bg-surface-container-low rounded-lg px-4 h-12">
+                <Mail className="h-4 w-4 text-on-surface-variant shrink-0" />
                 <input
                   type="email"
                   placeholder="evangelist@manifest.ke"
-                  className="flex-1 bg-transparent text-sm text-[#1C1C1C] placeholder:text-[#ABABAB] outline-none"
+                  className="flex-1 bg-transparent text-sm text-on-surface placeholder:text-on-surface-variant/50 outline-none"
                   {...form.register("email")}
                 />
               </div>
@@ -73,28 +73,28 @@ export default function AuthPage() {
             {/* Password */}
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-semibold tracking-[0.15em] text-[#4A4A4A] uppercase">
+                <label className="text-xs font-semibold tracking-[0.15em] text-on-surface uppercase">
                   Security Key
                 </label>
                 <button
                   type="button"
-                  className="text-xs font-semibold text-[#C47F17] tracking-wide uppercase hover:underline"
+                  className="text-xs font-semibold text-primary tracking-wide uppercase hover:underline"
                 >
                   Recover Access
                 </button>
               </div>
-              <div className="flex items-center gap-3 bg-[#F0EBE3] rounded-lg px-4 h-12">
-                <Lock className="h-4 w-4 text-[#9B9B9B] shrink-0" />
+              <div className="flex items-center gap-3 bg-surface-container-low rounded-lg px-4 h-12">
+                <Lock className="h-4 w-4 text-on-surface-variant shrink-0" />
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••••••••"
-                  className="flex-1 bg-transparent text-sm text-[#1C1C1C] placeholder:text-[#ABABAB] outline-none"
+                  className="flex-1 bg-transparent text-sm text-on-surface placeholder:text-on-surface-variant/50 outline-none"
                   {...form.register("password")}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
-                  className="text-[#9B9B9B] hover:text-[#4A4A4A]"
+                  className="text-on-surface-variant hover:text-on-surface"
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
@@ -110,7 +110,7 @@ export default function AuthPage() {
 
             <button
               type="submit"
-              className="w-full h-13 bg-[#F5A623] hover:bg-[#E09415] active:bg-[#C47F17] text-black font-bold text-sm tracking-[0.12em] uppercase rounded-xl flex items-center justify-center gap-2 transition-colors py-4"
+              className="w-full h-13 bg-primary-container hover:opacity-90 active:opacity-80 text-on-primary-fixed font-bold text-sm tracking-[0.12em] uppercase rounded-xl flex items-center justify-center gap-2 transition-opacity py-4"
             >
               Log In <span className="text-base">→</span>
             </button>
@@ -118,15 +118,15 @@ export default function AuthPage() {
 
           {/* Divider */}
           <div className="flex items-center gap-3">
-            <div className="flex-1 h-px bg-[#E0DAD2]" />
-            <span className="text-xs text-[#9B9B9B] tracking-wide uppercase">Or continue with</span>
-            <div className="flex-1 h-px bg-[#E0DAD2]" />
+            <div className="flex-1 h-px bg-outline-variant" />
+            <span className="text-xs text-on-surface-variant tracking-wide uppercase">Or continue with</span>
+            <div className="flex-1 h-px bg-outline-variant" />
           </div>
 
           {/* Google Workspace */}
           <button
             type="button"
-            className="w-full h-12 border border-[#E0DAD2] rounded-xl flex items-center justify-center gap-3 bg-white hover:bg-[#F9F6F1] transition-colors text-sm font-medium text-[#1C1C1C]"
+            className="w-full h-12 border border-outline-variant rounded-xl flex items-center justify-center gap-3 bg-surface-container-lowest hover:bg-surface-container-low transition-colors text-sm font-medium text-on-surface"
           >
             <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M17.64 9.2045C17.64 8.5664 17.5827 7.9527 17.4764 7.3636H9V10.845H13.8436C13.635 11.97 13.0009 12.9232 12.0477 13.5613V15.8195H14.9564C16.6582 14.2527 17.64 11.9455 17.64 9.2045Z" fill="#4285F4"/>
@@ -141,14 +141,14 @@ export default function AuthPage() {
 
       {/* Footer */}
       <div className="flex flex-col items-center gap-3 mt-8 mb-2">
-        <p className="text-xs text-[#9B9B9B] text-center">
+        <p className="text-xs text-on-surface-variant text-center">
           © 2024 Manifest Kenya Outreach.<br />
           Protected by end-to-end ecclesiastical encryption.
         </p>
-        <div className="flex gap-5 text-xs font-semibold tracking-wide text-[#7A7A7A] uppercase">
-          <button type="button" className="hover:text-[#C47F17]">Privacy Pact</button>
-          <button type="button" className="hover:text-[#C47F17]">System Terms</button>
-          <button type="button" className="hover:text-[#C47F17]">Support</button>
+        <div className="flex gap-5 text-xs font-semibold tracking-wide text-on-surface-variant uppercase">
+          <button type="button" className="hover:text-primary">Privacy Pact</button>
+          <button type="button" className="hover:text-primary">System Terms</button>
+          <button type="button" className="hover:text-primary">Support</button>
         </div>
       </div>
     </div>
