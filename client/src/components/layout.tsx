@@ -52,7 +52,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const initials = user?.email?.substring(0, 2).toUpperCase() ?? "??";
 
   const SidebarInner = ({ onNav }: { onNav?: () => void }) => (
-    <div className="flex flex-col h-full bg-white">
+    <div className="flex flex-col h-full bg-surface-container-lowest">
       {/* Brand */}
       <div className="flex items-center gap-3 px-6 py-6 border-b border-outline-variant/15">
         <div className="w-12 h-12 rounded-lg bg-primary-container flex items-center justify-center flex-shrink-0">
@@ -110,7 +110,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen bg-surface">
 
       {/* ── Top App Bar ── */}
-      <header className="fixed top-0 w-full z-50 h-16 bg-[#f6f6f6] border-b border-outline-variant/20 backdrop-blur-xl flex items-center justify-between px-6 shadow-sm shadow-black/[0.04]">
+      <header className="fixed top-0 w-full z-50 h-16 bg-surface border-b border-outline-variant/20 backdrop-blur-xl flex items-center justify-between px-6 shadow-sm shadow-black/[0.04]">
         <div className="flex items-center gap-3">
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
@@ -150,7 +150,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </main>
 
       {/* ── Mobile Bottom Nav ── */}
-      <nav className="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 bg-white rounded-t-xl border-t border-outline-variant/15 shadow-[0_-4px_20px_0_rgba(81,93,105,0.06)]">
+      <nav className="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 bg-surface-container-lowest rounded-t-xl border-t border-outline-variant/15 shadow-[0_-4px_20px_0_rgba(81,93,105,0.06)]">
         {navigation.slice(0, 5).map((item) => {
           const active = location === item.href;
           return (

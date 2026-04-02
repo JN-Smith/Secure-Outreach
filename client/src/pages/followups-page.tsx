@@ -126,7 +126,7 @@ export default function FollowUpsPage() {
           <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
             Pending contacts ({pending.length})
           </h3>
-          <div className="bg-white rounded-xl border overflow-hidden divide-y">
+          <div className="bg-surface-container-lowest rounded-xl border overflow-hidden divide-y">
             {contactsLoading ? (
               <div className="flex items-center justify-center gap-2 py-12 text-muted-foreground">
                 <Loader2 className="h-4 w-4 animate-spin" /> Loading...
@@ -164,7 +164,7 @@ export default function FollowUpsPage() {
         {/* Right — recent activity */}
         <div className="space-y-3">
           <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Recent Logs</h3>
-          <div className="bg-white rounded-xl border overflow-hidden divide-y">
+          <div className="bg-surface-container-lowest rounded-xl border overflow-hidden divide-y">
             {recentLogs.length === 0 ? (
               <p className="text-center text-sm text-muted-foreground py-8">No logs yet.</p>
             ) : (

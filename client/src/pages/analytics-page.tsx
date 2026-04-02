@@ -17,7 +17,7 @@ function initials(name: string) {
 
 function KPICard({ label, value, sub, color }: { label: string; value: number; sub?: string; color: string }) {
   return (
-    <div className="bg-white rounded-xl border p-5">
+    <div className="bg-surface-container-lowest rounded-xl border p-5">
       <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-1">{label}</p>
       <p className={`text-4xl font-black ${color}`}>{value}</p>
       {sub && <p className="text-xs text-muted-foreground mt-1">{sub}</p>}
@@ -62,7 +62,7 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Per-evangelist breakdown */}
-      <div className="bg-white rounded-xl border overflow-hidden">
+      <div className="bg-surface-container-lowest rounded-xl border overflow-hidden">
         <div className="px-6 py-4 border-b bg-gray-50/70">
           <p className="text-sm font-bold text-gray-900">Evangelist Activity Breakdown</p>
           <p className="text-xs text-muted-foreground mt-0.5">

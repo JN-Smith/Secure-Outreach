@@ -204,7 +204,7 @@ export default function ContactsPage() {
       </div>
 
       {/* List */}
-      <div className="bg-white rounded-xl border overflow-hidden divide-y divide-border">
+      <div className="bg-surface-container-lowest rounded-xl border overflow-hidden divide-y divide-border">
         {isLoading ? (
           <div className="flex items-center justify-center py-16 text-muted-foreground gap-2">
             <Loader2 className="h-4 w-4 animate-spin" />

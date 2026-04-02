@@ -73,7 +73,7 @@ export default function AdminsPage() {
 
       {/* Invite form */}
       {showForm && (
-        <div className="bg-white rounded-xl border p-6 space-y-5">
+        <div className="bg-surface-container-lowest rounded-xl border p-6 space-y-5">
           <div>
             <p className="font-bold text-sm text-gray-900">Invite New Admin</p>
             <p className="text-xs text-muted-foreground mt-0.5">
@@ -158,7 +158,7 @@ export default function AdminsPage() {
       )}
 
       {/* Admin list */}
-      <div className="bg-white rounded-xl border overflow-hidden">
+      <div className="bg-surface-container-lowest rounded-xl border overflow-hidden">
         {isLoading ? (
           <div className="py-16 text-center text-muted-foreground text-sm">Loading admins…</div>
         ) : admins.length === 0 ? (
