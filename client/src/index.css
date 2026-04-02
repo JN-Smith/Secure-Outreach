@@ -123,6 +123,63 @@
   --sidebar-ring: 30 100% 26%;
 }
 
+.dark {
+  --primary: 37 97% 55%;              /* amber-500 — brighter in dark */
+  --primary-foreground: 26 100% 9%;
+
+  --background: 180 4% 11%;           /* #1a1c1c */
+  --foreground: 180 3% 91%;           /* #e7e8e8 */
+
+  --card: 180 4% 14%;                 /* #212323 */
+  --card-foreground: 180 3% 91%;
+
+  --popover: 180 4% 14%;
+  --popover-foreground: 180 3% 91%;
+
+  --secondary: 210 10% 55%;
+  --secondary-foreground: 0 0% 100%;
+
+  --muted: 180 4% 20%;
+  --muted-foreground: 180 3% 60%;
+
+  --accent: 37 97% 55%;
+  --accent-foreground: 26 100% 9%;
+
+  --destructive: 12 80% 55%;
+  --destructive-foreground: 0 0% 100%;
+
+  --border: 180 4% 25%;
+  --input: 180 4% 20%;
+  --ring: 37 97% 55%;
+
+  --sidebar: 180 4% 12%;
+  --sidebar-foreground: 180 3% 91%;
+  --sidebar-primary: 37 97% 55%;
+  --sidebar-primary-foreground: 26 100% 9%;
+  --sidebar-accent: 37 97% 55%;
+  --sidebar-accent-foreground: 26 100% 9%;
+  --sidebar-border: 180 4% 22%;
+  --sidebar-ring: 37 97% 55%;
+
+  --color-surface:                   #1a1c1c;
+  --color-surface-bright:            #222424;
+  --color-surface-dim:               #111313;
+  --color-surface-container-lowest:  #212323;
+  --color-surface-container-low:     #252727;
+  --color-surface-container:         #2a2c2c;
+  --color-surface-container-high:    #2f3131;
+  --color-surface-container-highest: #343636;
+  --color-on-surface:                #e7e8e8;
+  --color-on-surface-variant:        #acadad;
+  --color-primary-container:         #fca21e;
+  --color-on-primary-container:      #2e1900;
+  --color-on-primary-fixed:          #2e1900;
+  --color-secondary-container:       #2a3540;
+  --color-on-secondary-container:    #b0bec8;
+  --color-outline:                   #5a5c5c;
+  --color-outline-variant:           #3a3c3c;
+}
+
 @layer base {
   * {
     -webkit-font-smoothing: antialiased;

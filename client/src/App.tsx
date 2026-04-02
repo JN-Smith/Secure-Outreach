@@ -3,6 +3,7 @@ import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { ThemeProvider } from "next-themes";
 import NotFound from "@/pages/not-found";
 import Layout from "@/components/layout";
 import { AuthProvider, useAuth } from "@/lib/auth";
@@ -19,6 +20,7 @@ import EvangelistDashboard from "@/pages/evangelist-dashboard";
 import AdminDashboard from "@/pages/admin-dashboard";
 import PastorDashboard from "@/pages/pastor-dashboard";
 import EvangelistsPage from "@/pages/evangelists-page";
+import AdminsPage from "@/pages/admins-page";
 import AnalyticsPage from "@/pages/analytics-page";
 
 function AuthenticatedApp() {
@@ -36,6 +38,7 @@ function AuthenticatedApp() {
         <Route path="/contacts" component={ContactsPage} />
         <Route path="/contacts/new" component={ContactFormPage} />
         <Route path="/evangelists" component={EvangelistsPage} />
+        <Route path="/admins" component={AdminsPage} />
         <Route path="/analytics" component={AnalyticsPage} />
         <Route path="/followups" component={FollowUpsPage} />
         <Route path="/settings" component={SettingsPage} />
@@ -71,16 +74,18 @@ function Router() {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <AuthProvider>
-          <ContactsProvider>
-            <Toaster richColors position="top-right" />
-            <Router />
-          </ContactsProvider>
-        </AuthProvider>
-      </TooltipProvider>
-    </QueryClientProvider>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <AuthProvider>
+            <ContactsProvider>
+              <Toaster richColors position="top-right" />
+              <Router />
+            </ContactsProvider>
+          </AuthProvider>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 }
 

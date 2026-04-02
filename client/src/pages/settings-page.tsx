@@ -6,9 +6,11 @@ import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Bell, Shield, User, Globe } from "lucide-react";
 import { useAuth } from "@/lib/auth";
+import { useTheme } from "next-themes";
 
 export default function SettingsPage() {
   const { user } = useAuth();
+  const { theme, setTheme } = useTheme();
 
   return (
     <div className="space-y-8 max-w-4xl mx-auto">
@@ -86,7 +88,10 @@ export default function SettingsPage() {
                 <Label>Dark Mode</Label>
                 <p className="text-sm text-muted-foreground">Switch between light and dark themes.</p>
               </div>
-              <Switch />
+              <Switch
+                checked={theme === "dark"}
+                onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
+              />
             </div>
             <Separator />
             <div className="flex items-center justify-between">

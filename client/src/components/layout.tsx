@@ -19,6 +19,7 @@ function getNavItems(role: string | undefined): NavItem[] {
       { name: "Ministry Overview", href: "/", icon: "church" },
       { name: "All Contacts", href: "/contacts", icon: "contacts" },
       { name: "Evangelists", href: "/evangelists", icon: "volunteer_activism" },
+      { name: "Admins", href: "/admins", icon: "shield_person" },
       { name: "Analytics", href: "/analytics", icon: "bar_chart_4_bars" },
       { name: "Follow-ups", href: "/followups", icon: "diversity_3" },
       { name: "Settings", href: "/settings", icon: "settings" },
