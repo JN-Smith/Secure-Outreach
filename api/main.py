@@ -57,6 +57,7 @@ app = FastAPI(
     version="1.0.0",
     lifespan=lifespan,
     redirect_slashes=False,
+    root_path="/outreach",
 )
 
 cors_origins = [o.strip() for o in settings.CORS_ORIGINS.split(",") if o.strip()]
