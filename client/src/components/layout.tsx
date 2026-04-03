@@ -1,6 +1,7 @@
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/lib/auth";
 import { useState } from "react";
+import { useTheme } from "next-themes";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
@@ -47,6 +48,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
   const { user, logout } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
 
   const navigation = getNavItems(user?.role);
   const initials = user?.email?.substring(0, 2).toUpperCase() ?? "??";
@@ -129,8 +131,24 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <h1 className="text-lg font-extrabold text-on-surface tracking-tight">Manifest Kenya</h1>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <span className="text-sm font-bold text-primary hidden sm:block">{roleLabel(user?.role)}</span>
+          {/* Dark / Light mode toggle */}
+          <button
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            className="relative inline-flex items-center w-12 h-6 rounded-full transition-colors duration-300 focus:outline-none border border-outline-variant/30 flex-shrink-0"
+            style={{ background: theme === "dark" ? "#fca21e" : "#acadad" }}
+            title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+          >
+            <span
+              className="absolute flex items-center justify-center w-4 h-4 rounded-full bg-surface-container-lowest shadow transition-transform duration-300"
+              style={{ transform: theme === "dark" ? "translateX(28px)" : "translateX(4px)" }}
+            >
+              <span className="material-symbols-outlined text-[11px] text-on-surface">
+                {theme === "dark" ? "dark_mode" : "light_mode"}
+              </span>
+            </span>
+          </button>
           <div className="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-sm font-black text-on-surface-variant border border-outline-variant/20 overflow-hidden">
             {initials}
           </div>

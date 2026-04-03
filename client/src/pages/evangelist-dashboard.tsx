@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
+import { useTheme } from "next-themes";
 import { useAuth } from "@/lib/auth";
 import { useEvangelistDashboard } from "@/lib/api/dashboard";
 import { useContacts } from "@/lib/contacts-context";
@@ -65,6 +66,7 @@ const ACTIVITY_FEED = [
 export default function EvangelistDashboard() {
   const { user } = useAuth();
   const [, navigate] = useLocation();
+  const { theme, setTheme } = useTheme();
   const { data: dashboard } = useEvangelistDashboard();
   const { contacts: myContacts } = useContacts();
   const { data: teams = [] } = useTeams();
@@ -117,7 +119,23 @@ export default function EvangelistDashboard() {
               </div>
             </div>
           </div>
-          <div className="flex gap-3 flex-wrap">
+          <div className="flex gap-3 flex-wrap items-center">
+            {/* Dark / Light mode toggle */}
+            <button
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className="relative inline-flex items-center w-14 h-7 rounded-full transition-colors duration-300 focus:outline-none border border-outline-variant/30"
+              style={{ background: theme === "dark" ? "#fca21e" : "#e1e3e3" }}
+              title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            >
+              <span
+                className="absolute flex items-center justify-center w-5 h-5 rounded-full bg-surface-container-lowest shadow transition-transform duration-300"
+                style={{ transform: theme === "dark" ? "translateX(32px)" : "translateX(4px)" }}
+              >
+                <span className="material-symbols-outlined text-[14px] text-on-surface">
+                  {theme === "dark" ? "dark_mode" : "light_mode"}
+                </span>
+              </span>
+            </button>
             <button className="btn-outline text-sm py-2.5 px-5">Export PDF</button>
             <button
               className="btn-primary text-sm py-2.5 px-5 flex items-center gap-2"
