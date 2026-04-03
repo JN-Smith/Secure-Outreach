@@ -133,7 +133,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
         <div className="flex items-center gap-3">
           <span className="text-sm font-bold text-primary hidden sm:block">{roleLabel(user?.role)}</span>
-          {/* Dark / Light mode toggle */}
           <button
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             className="relative inline-flex items-center w-12 h-6 rounded-full transition-colors duration-300 focus:outline-none border border-outline-variant/30 flex-shrink-0"
