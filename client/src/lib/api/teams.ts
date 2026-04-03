@@ -23,7 +23,7 @@ export function useTeams() {
   return useQuery<Team[]>({
     queryKey: ["/api/teams"],
     queryFn: async () => {
-      const res = await apiRequest("GET", "/api/teams/");
+      const res = await apiRequest("GET", "/api/teams");
       return res.json();
     },
   });
@@ -61,7 +61,7 @@ export function useCreateTeam() {
       outreach_days?: string[];
       active_zones?: string[];
     }) => {
-      const res = await apiRequest("POST", "/api/teams/", data);
+      const res = await apiRequest("POST", "/api/teams", data);
       return res.json() as Promise<Team>;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["/api/teams"] }),

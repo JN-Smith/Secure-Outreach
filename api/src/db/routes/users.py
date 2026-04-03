@@ -20,7 +20,7 @@ users_router = APIRouter(prefix="/api/users", tags=["users"])
 ADMIN_ALLOWED_ROLES = {"evangelist", "data_collector"}
 
 
-@users_router.get("/", response_model=list[UserRead])
+@users_router.get("", response_model=list[UserRead])
 async def list_users_route(
     role: str | None = None,
     _: User = Depends(require_admin),
@@ -29,7 +29,7 @@ async def list_users_route(
     return await list_users(db, role=role)
 
 
-@users_router.post("/", response_model=UserRead, status_code=status.HTTP_201_CREATED)
+@users_router.post("", response_model=UserRead, status_code=status.HTTP_201_CREATED)
 async def create_user_route(
     data: UserCreate,
     current_user: User = Depends(require_admin),

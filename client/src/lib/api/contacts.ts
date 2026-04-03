@@ -51,7 +51,7 @@ export function useContacts(filters?: ContactFilters) {
   return useQuery<Contact[]>({
     queryKey: ["/api/contacts", filters],
     queryFn: async () => {
-      const res = await apiRequest("GET", `/api/contacts/${buildQuery(filters)}`);
+      const res = await apiRequest("GET", `/api/contacts${buildQuery(filters)}`);
       return res.json();
     },
   });
@@ -72,7 +72,7 @@ export function useCreateContact() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (data: Omit<Contact, "id" | "created_at" | "updated_at" | "evangelist_id" | "status">) => {
-      const res = await apiRequest("POST", "/api/contacts/", data);
+      const res = await apiRequest("POST", "/api/contacts", data);
       return res.json() as Promise<Contact>;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["/api/contacts"] }),

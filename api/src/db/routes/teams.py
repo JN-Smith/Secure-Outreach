@@ -21,7 +21,7 @@ from src.services.teams_service import (
 teams_router = APIRouter(prefix="/api/teams", tags=["teams"])
 
 
-@teams_router.get("/", response_model=list[TeamRead])
+@teams_router.get("", response_model=list[TeamRead])
 async def list_teams_route(
     current_user: User = Depends(require_any),
     db: AsyncSession = Depends(get_session),
@@ -29,7 +29,7 @@ async def list_teams_route(
     return await list_teams(db, current_user)
 
 
-@teams_router.post("/", response_model=TeamRead, status_code=status.HTTP_201_CREATED)
+@teams_router.post("", response_model=TeamRead, status_code=status.HTTP_201_CREATED)
 async def create_team_route(
     data: TeamCreate,
     _: User = Depends(require_admin),

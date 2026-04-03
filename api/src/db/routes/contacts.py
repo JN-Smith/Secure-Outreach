@@ -38,7 +38,7 @@ async def _enrich(contacts: list[Contact], db: AsyncSession) -> list[ContactRead
     return results
 
 
-@contacts_router.get("/", response_model=list[ContactRead])
+@contacts_router.get("", response_model=list[ContactRead])
 async def list_contacts_route(
     status: str | None = None,
     team_id: uuid.UUID | None = None,
@@ -58,7 +58,7 @@ async def list_contacts_route(
     return await _enrich(contacts, db)
 
 
-@contacts_router.post("/", response_model=ContactRead, status_code=status.HTTP_201_CREATED)
+@contacts_router.post("", response_model=ContactRead, status_code=status.HTTP_201_CREATED)
 async def create_contact_route(
     data: ContactCreate,
     current_user: User = Depends(require_any),

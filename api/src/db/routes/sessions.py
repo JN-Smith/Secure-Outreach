@@ -19,7 +19,7 @@ from src.services.sessions_service import (
 sessions_router = APIRouter(prefix="/api/outreach-sessions", tags=["outreach-sessions"])
 
 
-@sessions_router.get("/", response_model=list[SessionRead])
+@sessions_router.get("", response_model=list[SessionRead])
 async def list_sessions_route(
     team_id: uuid.UUID | None = None,
     date_from: date | None = None,
@@ -30,7 +30,7 @@ async def list_sessions_route(
     return await list_sessions(db, current_user, team_id=team_id, date_from=date_from, date_to=date_to)
 
 
-@sessions_router.post("/", response_model=SessionRead, status_code=status.HTTP_201_CREATED)
+@sessions_router.post("", response_model=SessionRead, status_code=status.HTTP_201_CREATED)
 async def create_session_route(
     data: SessionCreate,
     current_user: User = Depends(require_any),

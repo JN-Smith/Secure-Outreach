@@ -6,7 +6,7 @@ export function useUsers(role?: string) {
   return useQuery<User[]>({
     queryKey: ["/api/users", role],
     queryFn: async () => {
-      const url = role ? `/api/users/?role=${role}` : "/api/users/";
+      const url = role ? `/api/users?role=${role}` : "/api/users";
       const res = await apiRequest("GET", url);
       return res.json();
     },
@@ -35,7 +35,7 @@ export function useCreateUser() {
       phone?: string;
       location?: string;
     }) => {
-      const res = await apiRequest("POST", "/api/users/", data);
+      const res = await apiRequest("POST", "/api/users", data);
       return res.json() as Promise<User>;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["/api/users"] }),
@@ -119,7 +119,7 @@ export function useEvangelistAnalytics() {
   return useQuery<EvangelistKPI[]>({
     queryKey: ["/api/dashboard/evangelist-analytics"],
     queryFn: async () => {
-      const res = await apiRequest("GET", "/api/dashboard/evangelist-analytics/");
+      const res = await apiRequest("GET", "/api/dashboard/evangelist-analytics");
       return res.json();
     },
   });
