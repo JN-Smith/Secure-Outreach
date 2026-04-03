@@ -11,7 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
-import { useContacts } from "@/lib/contacts-context";
+import { useCreateContact } from "@/lib/api/contacts";
 
 const contactSchema = z.object({
   fullName: z.string().min(2, "Name is required"),
@@ -42,10 +42,14 @@ const contactSchema = z.object({
   consent: z.boolean().refine(val => val === true, "Consent is required"),
 });
 
+function normalizeYesNo(val: string) {
+  return val === "Unsure" ? "Not Sure" : val;
+}
+
 export default function ContactFormPage() {
   const [, setLocation] = useLocation();
-  const { addContact } = useContacts();
-  
+  const createContact = useCreateContact();
+
   const form = useForm<z.infer<typeof contactSchema>>({
     resolver: zodResolver(contactSchema),
     defaultValues: {
@@ -65,14 +69,35 @@ export default function ContactFormPage() {
   const bestTimes = form.watch("bestTimes");
 
   function onSubmit(values: z.infer<typeof contactSchema>) {
-    addContact(
-      { ...values },
-      () => {
-        toast.success("Contact saved", { description: "Outreach contact recorded." });
-        setLocation("/contacts");
-      },
-      () => {
-        toast.error("Failed to save contact", { description: "Check your connection and try again." });
+    createContact.mutate(
+      {
+        full_name: values.fullName,
+        phone: values.phone,
+        email: undefined,
+        gender: values.gender,
+        age_range: values.ageRange,
+        born_again: normalizeYesNo(values.bornAgain),
+        discipleship_status: values.discipleshipStatus,
+        baptized: normalizeYesNo(values.baptized),
+        location: values.location,
+        is_student: values.isStudent,
+        institution: values.institution,
+        course: values.course,
+        follow_up_method: values.followUpMethod,
+        prayer_requests: values.prayerRequests,
+        notes: values.notes,
+        status: values.followUpStatus,
+        tags: values.tags ?? [],
+      } as any,
+      {
+        onSuccess: () => {
+          toast.success("Contact saved", { description: "Outreach contact recorded." });
+          setLocation("/contacts");
+        },
+        onError: (err: unknown) => {
+          const msg = err instanceof Error ? err.message : "Unknown error";
+          toast.error("Failed to save contact", { description: msg });
+        },
       },
     );
   }
@@ -517,9 +542,9 @@ export default function ContactFormPage() {
               type="submit" 
               size="lg" 
               className="shadow-lg shadow-primary/25"
-              disabled={form.formState.isSubmitting}
+              disabled={createContact.isPending}
             >
-              {form.formState.isSubmitting ? "Saving..." : "Save Contact"}
+              {createContact.isPending ? "Saving..." : "Save Contact"}
             </Button>
           </div>
         </form>
