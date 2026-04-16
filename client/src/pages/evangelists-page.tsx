@@ -80,7 +80,7 @@ export default function EvangelistsPage() {
     );
   }
 
-  const pendingCount = kpis.filter(k => k.invite_pending).length;
+  const pendingCount = evangelists.filter(e => e.invite_pending).length;
 
   return (
     <div className="space-y-6">
@@ -264,7 +264,7 @@ export default function EvangelistsPage() {
                       )}
                     </td>
                     <td className="px-4 py-4">
-                      {kpi?.invite_pending ? (
+                      {ev.invite_pending ? (
                         <div className="flex items-center gap-2 flex-wrap">
                           <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300">
                             <AlertCircle className="h-3 w-3" /> Pending Setup
@@ -321,7 +321,7 @@ export default function EvangelistsPage() {
                         {selected.kpi.team_name}
                       </span>
                     )}
-                    {selected.kpi?.invite_pending ? (
+                    {selected.user.invite_pending ? (
                       <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300">
                         <AlertCircle className="h-3 w-3" /> Pending Setup
                       </span>
@@ -333,7 +333,7 @@ export default function EvangelistsPage() {
               </div>
 
               {/* KPI stats */}
-              {!selected.kpi?.invite_pending && (
+              {!selected.user.invite_pending && (
                 <div className="grid grid-cols-4 gap-2">
                   <StatCard label="Contacts" value={selected.kpi?.contacts_total ?? 0} color="text-amber-600" />
                   <StatCard label="This week" value={selected.kpi?.contacts_this_week ?? 0} color="text-blue-600" />
@@ -377,27 +377,25 @@ export default function EvangelistsPage() {
               </div>
 
               {/* Actions */}
-              {selected.kpi?.invite_pending && (
-                <div className="pt-1">
-                  <button
-                    disabled={resendInvite.isPending}
-                    onClick={() =>
-                      resendInvite.mutate(selected.user.id, {
-                        onSuccess: (data) => {
-                          const url = `${window.location.origin}/accept-invite?token=${data.token}`;
-                          navigator.clipboard.writeText(url);
-                          toast.success("New invite link copied to clipboard");
-                        },
-                        onError: () => toast.error("Failed to regenerate invite link"),
-                      })
-                    }
-                    className="w-full flex items-center justify-center gap-2 border border-amber-300 text-amber-700 hover:bg-amber-50 dark:hover:bg-amber-900/20 text-sm font-semibold px-4 py-2.5 rounded-lg transition-colors disabled:opacity-50"
-                  >
-                    <RefreshCw className="h-4 w-4" />
-                    Regenerate & Copy Invite Link
-                  </button>
-                </div>
-              )}
+              <div className="pt-1">
+                <button
+                  disabled={resendInvite.isPending}
+                  onClick={() =>
+                    resendInvite.mutate(selected.user.id, {
+                      onSuccess: (data) => {
+                        const url = `${window.location.origin}/accept-invite?token=${data.token}`;
+                        navigator.clipboard.writeText(url);
+                        toast.success("Password link copied to clipboard");
+                      },
+                      onError: () => toast.error("Failed to generate link"),
+                    })
+                  }
+                  className="w-full flex items-center justify-center gap-2 border border-amber-300 text-amber-700 hover:bg-amber-50 dark:hover:bg-amber-900/20 text-sm font-semibold px-4 py-2.5 rounded-lg transition-colors disabled:opacity-50"
+                >
+                  <RefreshCw className="h-4 w-4" />
+                  {selected.user.invite_pending ? "Regenerate & Copy Invite Link" : "Generate Password Reset Link"}
+                </button>
+              </div>
             </div>
           )}
         </DialogContent>

@@ -298,27 +298,25 @@ export default function AdminsPage() {
               </div>
 
               {/* Actions */}
-              {selectedAdmin.invite_pending && (
-                <div className="pt-1">
-                  <button
-                    disabled={resendInvite.isPending}
-                    onClick={() =>
-                      resendInvite.mutate(selectedAdmin.id, {
-                        onSuccess: (data) => {
-                          const url = `${window.location.origin}/accept-invite?token=${data.token}`;
-                          navigator.clipboard.writeText(url);
-                          toast.success("New invite link copied to clipboard");
-                        },
-                        onError: () => toast.error("Failed to regenerate invite link"),
-                      })
-                    }
-                    className="w-full flex items-center justify-center gap-2 border border-amber-300 text-amber-700 hover:bg-amber-50 dark:hover:bg-amber-900/20 text-sm font-semibold px-4 py-2.5 rounded-lg transition-colors disabled:opacity-50"
-                  >
-                    <RefreshCw className="h-4 w-4" />
-                    Regenerate & Copy Invite Link
-                  </button>
-                </div>
-              )}
+              <div className="pt-1">
+                <button
+                  disabled={resendInvite.isPending}
+                  onClick={() =>
+                    resendInvite.mutate(selectedAdmin.id, {
+                      onSuccess: (data) => {
+                        const url = `${window.location.origin}/accept-invite?token=${data.token}`;
+                        navigator.clipboard.writeText(url);
+                        toast.success("Password link copied to clipboard");
+                      },
+                      onError: () => toast.error("Failed to generate link"),
+                    })
+                  }
+                  className="w-full flex items-center justify-center gap-2 border border-amber-300 text-amber-700 hover:bg-amber-50 dark:hover:bg-amber-900/20 text-sm font-semibold px-4 py-2.5 rounded-lg transition-colors disabled:opacity-50"
+                >
+                  <RefreshCw className="h-4 w-4" />
+                  {selectedAdmin.invite_pending ? "Regenerate & Copy Invite Link" : "Generate Password Reset Link"}
+                </button>
+              </div>
             </div>
           )}
         </DialogContent>

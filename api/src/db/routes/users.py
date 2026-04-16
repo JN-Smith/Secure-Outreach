@@ -88,10 +88,7 @@ async def resend_invite_route(
             raise HTTPException(status.HTTP_403_FORBIDDEN, "Insufficient permissions")
     result = await regenerate_invite_token(db, user_id)
     if not result:
-        raise HTTPException(
-            status.HTTP_400_BAD_REQUEST,
-            "User not found or has already set their password",
-        )
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "User not found or inactive")
     user, token = result
     return InviteResponse(user=UserRead.model_validate(user), token=token)
 

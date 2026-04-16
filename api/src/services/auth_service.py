@@ -115,7 +115,7 @@ async def regenerate_invite_token(db: AsyncSession, user_id: uuid.UUID) -> Optio
         select(User).where(User.id == user_id, User.is_active == True)  # noqa: E712
     )
     user = result.scalar_one_or_none()
-    if not user or not user.invite_pending:
+    if not user:
         return None
     token = secrets.token_urlsafe(32)
     user.invite_token = token
