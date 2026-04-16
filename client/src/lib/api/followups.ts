@@ -11,6 +11,8 @@ export interface FollowUpLog {
   notes: string | null;
   new_status: string | null;
   created_at: string;
+  contact_name: string | null;
+  evangelist_name: string | null;
 }
 
 export interface FollowUpLogCreate {

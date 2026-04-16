@@ -49,11 +49,4 @@ async def evangelist_analytics_route(
     db: AsyncSession = Depends(get_session),
 ):
     """Per-evangelist KPIs: contacts, follow-ups, login stats."""
-    if current_user.role == "admin":
-        teams_result = await db.execute(
-            select(TeamMember.team_id).where(TeamMember.user_id == current_user.id)
-        )
-        team_ids = [row.team_id for row in teams_result.all()]
-    else:
-        team_ids = None  # pastor sees all
-    return await get_evangelist_analytics(db, team_ids)
+    return await get_evangelist_analytics(db, team_ids=None)  # admin and pastor see all

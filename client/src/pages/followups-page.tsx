@@ -169,11 +169,15 @@ export default function FollowUpsPage() {
               <p className="text-center text-sm text-muted-foreground py-8">No logs yet.</p>
             ) : (
               recentLogs.slice(0, 10).map((log) => {
-                const contact = contacts.find((c) => c.id === log.contact_id);
                 return (
                   <div key={log.id} className="px-4 py-3 space-y-1">
                     <div className="flex items-center justify-between">
-                      <p className="text-sm font-semibold truncate">{contact?.fullName ?? "Unknown"}</p>
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold truncate">{log.contact_name ?? "Unknown"}</p>
+                        {log.evangelist_name && (
+                          <p className="text-xs text-muted-foreground truncate">by {log.evangelist_name}</p>
+                        )}
+                      </div>
                       <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${OUTCOME_STYLE[log.outcome] ?? "bg-gray-100"}`}>
                         {log.outcome}
                       </span>

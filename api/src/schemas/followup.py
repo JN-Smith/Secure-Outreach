@@ -23,5 +23,7 @@ class FollowUpLogRead(BaseModel):
     notes: str | None
     new_status: str | None
     created_at: datetime
+    contact_name: str | None = None
+    evangelist_name: str | None = None
 
     model_config = ConfigDict(from_attributes=True)

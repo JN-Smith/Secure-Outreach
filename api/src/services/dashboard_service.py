@@ -146,26 +146,16 @@ async def _team_performance(db: AsyncSession, team_ids: list[uuid.UUID] | None =
 
 
 async def get_admin_dashboard(db: AsyncSession, user: User) -> AdminDashboard:
-    # Get teams this admin belongs to
-    teams_result = await db.execute(
-        select(TeamMember.team_id).where(TeamMember.user_id == user.id)
-    )
-    team_ids = [row.team_id for row in teams_result.all()]
-
-    base = select(func.count()).select_from(Contact).where(Contact.team_id.in_(team_ids))
+    # Admin sees org-wide stats (same as pastor)
+    base = select(func.count()).select_from(Contact)
 
     total = await db.scalar(base) or 0
     saved = await db.scalar(base.where(Contact.born_again == "Yes")) or 0
     follow_up = await db.scalar(base.where(Contact.status == "Needs Follow-up")) or 0
 
-    evangelists_result = await db.execute(
-        select(func.count(func.distinct(TeamMember.user_id)))
-        .where(TeamMember.team_id.in_(team_ids))
-    )
     active_evangelists = await db.scalar(
-        select(func.count(func.distinct(TeamMember.user_id)))
-        .join(User, User.id == TeamMember.user_id)
-        .where(TeamMember.team_id.in_(team_ids), User.is_active == True)  # noqa: E712
+        select(func.count()).select_from(User)
+        .where(User.role == "evangelist", User.is_active == True)  # noqa: E712
     ) or 0
 
     return AdminDashboard(
@@ -173,9 +163,9 @@ async def get_admin_dashboard(db: AsyncSession, user: User) -> AdminDashboard:
         saved_all_time=saved,
         active_evangelists=active_evangelists,
         follow_up_pending=follow_up,
-        weekly_trends=await _weekly_trends(db, team_ids),
-        pipeline=await _pipeline(db, team_ids),
-        team_performance=await _team_performance(db, team_ids),
+        weekly_trends=await _weekly_trends(db),
+        pipeline=await _pipeline(db),
+        team_performance=await _team_performance(db),
     )
 
 
