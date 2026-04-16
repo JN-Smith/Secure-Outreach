@@ -6,12 +6,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.db.routes.auth import get_current_user, require_admin, require_pastor
 from src.db.setup import get_session
 from src.db.models.user import User
-from src.schemas.auth import UserCreate, UserRead, UserUpdate
+from src.schemas.auth import InviteResponse, UserCreate, UserRead, UserUpdate
 from src.services.auth_service import (
     create_user,
     deactivate_user,
     get_user,
     list_users,
+    regenerate_invite_token,
     update_user,
 )
 
@@ -72,6 +73,27 @@ async def update_user_route(
     if not user:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "User not found")
     return await update_user(db, user, data.model_dump(exclude_none=True))
+
+
+@users_router.post("/{user_id}/resend-invite", response_model=InviteResponse)
+async def resend_invite_route(
+    user_id: uuid.UUID,
+    current_user: User = Depends(require_admin),
+    db: AsyncSession = Depends(get_session),
+):
+    """Regenerate an invite token for a user who hasn't set their password yet."""
+    if current_user.role == "admin":
+        target = await get_user(db, user_id)
+        if target and target.role not in ADMIN_ALLOWED_ROLES:
+            raise HTTPException(status.HTTP_403_FORBIDDEN, "Insufficient permissions")
+    result = await regenerate_invite_token(db, user_id)
+    if not result:
+        raise HTTPException(
+            status.HTTP_400_BAD_REQUEST,
+            "User not found or has already set their password",
+        )
+    user, token = result
+    return InviteResponse(user=UserRead.model_validate(user), token=token)
 
 
 @users_router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)

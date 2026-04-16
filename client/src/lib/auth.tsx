@@ -10,6 +10,11 @@ export interface User {
   full_name: string;
   phone: string | null;
   location: string | null;
+  is_active?: boolean;
+  invite_pending?: boolean;
+  last_login_at?: string | null;
+  login_count?: number;
+  created_at?: string;
 }
 
 interface AuthContextType {

@@ -72,6 +72,17 @@ export function useInviteEvangelist() {
   });
 }
 
+export function useResendInvite() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (userId: string) => {
+      const res = await apiRequest("POST", `/api/users/${userId}/resend-invite`);
+      return res.json() as Promise<InviteResult>;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["/api/users"] }),
+  });
+}
+
 export function useGetInviteInfo(token: string) {
   return useQuery<{ email: string; full_name: string }>({
     queryKey: ["/api/auth/invite", token],

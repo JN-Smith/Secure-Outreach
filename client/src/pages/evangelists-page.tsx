@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import { useUsers, useInviteEvangelist, useEvangelistAnalytics } from "@/lib/api/users";
+import { useUsers, useInviteEvangelist, useEvangelistAnalytics, useResendInvite } from "@/lib/api/users";
+import type { EvangelistKPI } from "@/lib/api/users";
 import { useTeams } from "@/lib/api/teams";
-import { Copy, Check, Mail, AlertCircle, UserPlus } from "lucide-react";
+import { Copy, Check, Mail, AlertCircle, UserPlus, RefreshCw, MapPin, Phone, Calendar, LogIn, Users, CheckCircle2 } from "lucide-react";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import type { User } from "@/lib/auth";
 
 function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
@@ -21,12 +24,42 @@ function initials(name: string) {
   return name.split(" ").slice(0, 2).map(n => n[0]?.toUpperCase() ?? "").join("");
 }
 
+function fmtDate(iso: string | null | undefined) {
+  if (!iso) return "—";
+  return new Date(iso).toLocaleDateString("en-KE", { day: "numeric", month: "short", year: "numeric" });
+}
+
+function fmtDateTime(iso: string | null | undefined) {
+  if (!iso) return "Never";
+  return new Date(iso).toLocaleString("en-KE", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
+}
+
+function DetailRow({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="flex items-start justify-between gap-4 py-2.5 border-b border-gray-100 last:border-0">
+      <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground flex-shrink-0">{label}</span>
+      <span className="text-sm text-gray-900 text-right">{children}</span>
+    </div>
+  );
+}
+
+function StatCard({ label, value, color }: { label: string; value: number; color: string }) {
+  return (
+    <div className="bg-gray-50/60 dark:bg-gray-900/20 rounded-xl p-3 text-center">
+      <p className={`text-2xl font-bold ${color}`}>{value}</p>
+      <p className="text-xs text-muted-foreground mt-0.5 font-medium">{label}</p>
+    </div>
+  );
+}
+
 export default function EvangelistsPage() {
   const { data: evangelists = [], isLoading } = useUsers("evangelist");
   const { data: teams = [] } = useTeams();
   const { data: kpis = [] } = useEvangelistAnalytics();
   const inviteEvangelist = useInviteEvangelist();
+  const resendInvite = useResendInvite();
 
+  const [selected, setSelected] = useState<{ user: User; kpi?: EvangelistKPI } | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", phone: "", teamId: "", role: "evangelist" });
   const [inviteLink, setInviteLink] = useState<string | null>(null);
@@ -206,7 +239,7 @@ export default function EvangelistsPage() {
               {evangelists.map((ev) => {
                 const kpi = kpis.find(k => k.user_id === ev.id);
                 return (
-                  <tr key={ev.id} className="hover:bg-gray-50/50 transition-colors">
+                  <tr key={ev.id} className="hover:bg-amber-50/40 transition-colors cursor-pointer" onClick={() => setSelected({ user: ev, kpi })}>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-full bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center text-amber-700 dark:text-amber-300 font-bold text-xs flex-shrink-0">
@@ -232,9 +265,28 @@ export default function EvangelistsPage() {
                     </td>
                     <td className="px-4 py-4">
                       {kpi?.invite_pending ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300">
-                          <AlertCircle className="h-3 w-3" /> Pending Setup
-                        </span>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300">
+                            <AlertCircle className="h-3 w-3" /> Pending Setup
+                          </span>
+                          <button
+                            disabled={resendInvite.isPending}
+                            onClick={() =>
+                              resendInvite.mutate(ev.id, {
+                                onSuccess: (data) => {
+                                  const url = `${window.location.origin}/accept-invite?token=${data.token}`;
+                                  navigator.clipboard.writeText(url);
+                                  toast.success("New invite link copied to clipboard");
+                                },
+                                onError: () => toast.error("Failed to regenerate invite link"),
+                              })
+                            }
+                            className="inline-flex items-center gap-1 text-xs text-amber-700 hover:text-amber-900 font-semibold disabled:opacity-50 transition-colors"
+                          >
+                            <RefreshCw className="h-3 w-3" />
+                            Resend
+                          </button>
+                        </div>
                       ) : (
                         <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300">Active</span>
                       )}
@@ -246,6 +298,110 @@ export default function EvangelistsPage() {
           </table>
         )}
       </div>
+
+      {/* Evangelist detail modal */}
+      <Dialog open={!!selected} onOpenChange={(open) => !open && setSelected(null)}>
+        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+          <DialogTitle className="sr-only">Evangelist Details</DialogTitle>
+          {selected && (
+            <div className="space-y-5">
+              {/* Hero */}
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 rounded-full bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center text-amber-700 dark:text-amber-300 font-bold text-xl flex-shrink-0">
+                  {initials(selected.user.full_name)}
+                </div>
+                <div className="space-y-1">
+                  <p className="font-bold text-lg leading-tight text-gray-900">{selected.user.full_name}</p>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300 capitalize">
+                      {selected.user.role.replace("_", " ")}
+                    </span>
+                    {selected.kpi?.team_name && (
+                      <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300">
+                        {selected.kpi.team_name}
+                      </span>
+                    )}
+                    {selected.kpi?.invite_pending ? (
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300">
+                        <AlertCircle className="h-3 w-3" /> Pending Setup
+                      </span>
+                    ) : (
+                      <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300">Active</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* KPI stats */}
+              {!selected.kpi?.invite_pending && (
+                <div className="grid grid-cols-4 gap-2">
+                  <StatCard label="Contacts" value={selected.kpi?.contacts_total ?? 0} color="text-amber-600" />
+                  <StatCard label="This week" value={selected.kpi?.contacts_this_week ?? 0} color="text-blue-600" />
+                  <StatCard label="Done" value={selected.kpi?.followups_done ?? 0} color="text-green-600" />
+                  <StatCard label="Pending" value={selected.kpi?.followups_pending ?? 0} color="text-orange-500" />
+                </div>
+              )}
+
+              {/* Details */}
+              <div className="bg-gray-50/60 dark:bg-gray-900/20 rounded-xl px-4 py-1">
+                <DetailRow label="Email">{selected.user.email}</DetailRow>
+                <DetailRow label="Phone">
+                  {selected.user.phone ? (
+                    <span className="flex items-center justify-end gap-1"><Phone className="h-3 w-3 text-muted-foreground" />{selected.user.phone}</span>
+                  ) : "—"}
+                </DetailRow>
+                <DetailRow label="Location">
+                  {selected.user.location ? (
+                    <span className="flex items-center justify-end gap-1"><MapPin className="h-3 w-3 text-muted-foreground" />{selected.user.location}</span>
+                  ) : "—"}
+                </DetailRow>
+                {selected.kpi?.converted != null && selected.kpi.converted > 0 && (
+                  <DetailRow label="Converted">
+                    <span className="flex items-center justify-end gap-1 text-green-700 font-semibold">
+                      <CheckCircle2 className="h-3 w-3" />{selected.kpi.converted}
+                    </span>
+                  </DetailRow>
+                )}
+                <DetailRow label="Member since">
+                  <span className="flex items-center justify-end gap-1"><Calendar className="h-3 w-3 text-muted-foreground" />{fmtDate(selected.user.created_at)}</span>
+                </DetailRow>
+                <DetailRow label="Last login">
+                  <span className="flex items-center justify-end gap-1"><LogIn className="h-3 w-3 text-muted-foreground" />{fmtDateTime(selected.kpi?.last_login_at ?? selected.user.last_login_at)}</span>
+                </DetailRow>
+                <DetailRow label="Login count">
+                  <span className="flex items-center justify-end gap-1">
+                    <Users className="h-3 w-3 text-muted-foreground" />
+                    {selected.kpi?.login_count ?? selected.user.login_count ?? 0} sessions
+                  </span>
+                </DetailRow>
+              </div>
+
+              {/* Actions */}
+              {selected.kpi?.invite_pending && (
+                <div className="pt-1">
+                  <button
+                    disabled={resendInvite.isPending}
+                    onClick={() =>
+                      resendInvite.mutate(selected.user.id, {
+                        onSuccess: (data) => {
+                          const url = `${window.location.origin}/accept-invite?token=${data.token}`;
+                          navigator.clipboard.writeText(url);
+                          toast.success("New invite link copied to clipboard");
+                        },
+                        onError: () => toast.error("Failed to regenerate invite link"),
+                      })
+                    }
+                    className="w-full flex items-center justify-center gap-2 border border-amber-300 text-amber-700 hover:bg-amber-50 dark:hover:bg-amber-900/20 text-sm font-semibold px-4 py-2.5 rounded-lg transition-colors disabled:opacity-50"
+                  >
+                    <RefreshCw className="h-4 w-4" />
+                    Regenerate & Copy Invite Link
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

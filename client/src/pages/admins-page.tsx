@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import { useUsers, useInviteEvangelist } from "@/lib/api/users";
-import { Copy, Check, Mail, AlertCircle, UserPlus, ShieldCheck } from "lucide-react";
+import { useUsers, useInviteEvangelist, useResendInvite } from "@/lib/api/users";
+import { Copy, Check, Mail, AlertCircle, UserPlus, ShieldCheck, RefreshCw, MapPin, Phone, Calendar, LogIn } from "lucide-react";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import type { User } from "@/lib/auth";
 
 function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
@@ -20,10 +22,31 @@ function initials(name: string) {
   return name.split(" ").slice(0, 2).map(n => n[0]?.toUpperCase() ?? "").join("");
 }
 
+function fmtDate(iso: string | null | undefined) {
+  if (!iso) return "—";
+  return new Date(iso).toLocaleDateString("en-KE", { day: "numeric", month: "short", year: "numeric" });
+}
+
+function fmtDateTime(iso: string | null | undefined) {
+  if (!iso) return "Never";
+  return new Date(iso).toLocaleString("en-KE", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
+}
+
+function DetailRow({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="flex items-start justify-between gap-4 py-2.5 border-b border-gray-100 last:border-0">
+      <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground flex-shrink-0">{label}</span>
+      <span className="text-sm text-gray-900 text-right">{children}</span>
+    </div>
+  );
+}
+
 export default function AdminsPage() {
   const { data: admins = [], isLoading } = useUsers("admin");
   const inviteAdmin = useInviteEvangelist();
+  const resendInvite = useResendInvite();
 
+  const [selectedAdmin, setSelectedAdmin] = useState<User | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", phone: "" });
   const [inviteLink, setInviteLink] = useState<string | null>(null);
@@ -178,7 +201,7 @@ export default function AdminsPage() {
             </thead>
             <tbody className="divide-y divide-gray-100">
               {admins.map((admin) => (
-                <tr key={admin.id} className="hover:bg-gray-50/50 transition-colors">
+                <tr key={admin.id} className="hover:bg-amber-50/40 transition-colors cursor-pointer" onClick={() => setSelectedAdmin(admin)}>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       <div className="w-9 h-9 rounded-full bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center text-amber-700 dark:text-amber-300 font-bold text-xs flex-shrink-0">
@@ -191,9 +214,28 @@ export default function AdminsPage() {
                   <td className="px-4 py-4 hidden lg:table-cell text-muted-foreground text-xs">{admin.phone ?? "—"}</td>
                   <td className="px-4 py-4">
                     {admin.invite_pending ? (
-                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300">
-                        <AlertCircle className="h-3 w-3" /> Pending Setup
-                      </span>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300">
+                          <AlertCircle className="h-3 w-3" /> Pending Setup
+                        </span>
+                        <button
+                          disabled={resendInvite.isPending}
+                          onClick={() =>
+                            resendInvite.mutate(admin.id, {
+                              onSuccess: (data) => {
+                                const url = `${window.location.origin}/accept-invite?token=${data.token}`;
+                                navigator.clipboard.writeText(url);
+                                toast.success("New invite link copied to clipboard");
+                              },
+                              onError: () => toast.error("Failed to regenerate invite link"),
+                            })
+                          }
+                          className="inline-flex items-center gap-1 text-xs text-amber-700 hover:text-amber-900 font-semibold disabled:opacity-50 transition-colors"
+                        >
+                          <RefreshCw className="h-3 w-3" />
+                          Resend
+                        </button>
+                      </div>
                     ) : (
                       <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300">Active</span>
                     )}
@@ -204,6 +246,83 @@ export default function AdminsPage() {
           </table>
         )}
       </div>
+
+      {/* Admin detail modal */}
+      <Dialog open={!!selectedAdmin} onOpenChange={(open) => !open && setSelectedAdmin(null)}>
+        <DialogContent className="max-w-md">
+          <DialogTitle className="sr-only">Admin Details</DialogTitle>
+          {selectedAdmin && (
+            <div className="space-y-5">
+              {/* Hero */}
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 rounded-full bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center text-amber-700 dark:text-amber-300 font-bold text-xl flex-shrink-0">
+                  {initials(selectedAdmin.full_name)}
+                </div>
+                <div className="space-y-1">
+                  <p className="font-bold text-lg leading-tight text-gray-900">{selectedAdmin.full_name}</p>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300 capitalize">
+                      {selectedAdmin.role}
+                    </span>
+                    {selectedAdmin.invite_pending ? (
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300">
+                        <AlertCircle className="h-3 w-3" /> Pending Setup
+                      </span>
+                    ) : (
+                      <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300">Active</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Details */}
+              <div className="bg-gray-50/60 dark:bg-gray-900/20 rounded-xl px-4 py-1">
+                <DetailRow label="Email">{selectedAdmin.email}</DetailRow>
+                <DetailRow label="Phone">
+                  {selectedAdmin.phone ? (
+                    <span className="flex items-center justify-end gap-1"><Phone className="h-3 w-3 text-muted-foreground" />{selectedAdmin.phone}</span>
+                  ) : "—"}
+                </DetailRow>
+                <DetailRow label="Location">
+                  {selectedAdmin.location ? (
+                    <span className="flex items-center justify-end gap-1"><MapPin className="h-3 w-3 text-muted-foreground" />{selectedAdmin.location}</span>
+                  ) : "—"}
+                </DetailRow>
+                <DetailRow label="Member since">
+                  <span className="flex items-center justify-end gap-1"><Calendar className="h-3 w-3 text-muted-foreground" />{fmtDate(selectedAdmin.created_at)}</span>
+                </DetailRow>
+                <DetailRow label="Last login">
+                  <span className="flex items-center justify-end gap-1"><LogIn className="h-3 w-3 text-muted-foreground" />{fmtDateTime(selectedAdmin.last_login_at)}</span>
+                </DetailRow>
+                <DetailRow label="Login count">{selectedAdmin.login_count ?? 0} sessions</DetailRow>
+              </div>
+
+              {/* Actions */}
+              {selectedAdmin.invite_pending && (
+                <div className="pt-1">
+                  <button
+                    disabled={resendInvite.isPending}
+                    onClick={() =>
+                      resendInvite.mutate(selectedAdmin.id, {
+                        onSuccess: (data) => {
+                          const url = `${window.location.origin}/accept-invite?token=${data.token}`;
+                          navigator.clipboard.writeText(url);
+                          toast.success("New invite link copied to clipboard");
+                        },
+                        onError: () => toast.error("Failed to regenerate invite link"),
+                      })
+                    }
+                    className="w-full flex items-center justify-center gap-2 border border-amber-300 text-amber-700 hover:bg-amber-50 dark:hover:bg-amber-900/20 text-sm font-semibold px-4 py-2.5 rounded-lg transition-colors disabled:opacity-50"
+                  >
+                    <RefreshCw className="h-4 w-4" />
+                    Regenerate & Copy Invite Link
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

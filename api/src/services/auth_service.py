@@ -110,6 +110,20 @@ async def create_invite(db: AsyncSession, data: EvangelistInvite) -> tuple[User,
     return user, token
 
 
+async def regenerate_invite_token(db: AsyncSession, user_id: uuid.UUID) -> Optional[tuple[User, str]]:
+    result = await db.execute(
+        select(User).where(User.id == user_id, User.is_active == True)  # noqa: E712
+    )
+    user = result.scalar_one_or_none()
+    if not user or not user.invite_pending:
+        return None
+    token = secrets.token_urlsafe(32)
+    user.invite_token = token
+    await db.commit()
+    await db.refresh(user)
+    return user, token
+
+
 async def get_invite_info(db: AsyncSession, token: str) -> Optional[User]:
     result = await db.execute(
         select(User).where(User.invite_token == token, User.is_active == True)  # noqa: E712
