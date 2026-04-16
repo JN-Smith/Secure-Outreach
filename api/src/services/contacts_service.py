@@ -5,7 +5,6 @@ from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.db.models.contact import Contact
-from src.db.models.team import TeamMember
 from src.db.models.user import User
 from src.schemas.contact import ContactCreate, ContactUpdate
 
@@ -53,13 +52,7 @@ async def list_contacts(
     # Role-based scoping
     if current_user.role == "evangelist" or current_user.role == "data_collector":
         query = query.where(Contact.evangelist_id == current_user.id)
-    elif current_user.role == "admin":
-        # Admin sees contacts from their managed teams
-        teams_result = await db.execute(
-            select(TeamMember.team_id).where(TeamMember.user_id == current_user.id)
-        )
-        admin_team_ids = [row.team_id for row in teams_result.all()]
-        query = query.where(Contact.team_id.in_(admin_team_ids))
+    # pastor and admin see all contacts; optional filters below narrow the results
 
     # Additional filters
     if status:
